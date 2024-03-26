@@ -11,12 +11,16 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="HyperSphere.h" />
     <ClInclude Include="M33.h" />
     <ClInclude Include="M44.h" />
+    <ClInclude Include="Material.h" />
+    <ClInclude Include="Shape.h" />
     <ClInclude Include="V3.h" />
     <ClInclude Include="V4.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="HyperSphere.cpp" />
     <ClCompile Include="M33.cpp" />
     <ClCompile Include="M44.cpp" />
     <ClCompile Include="V3.cpp" />
