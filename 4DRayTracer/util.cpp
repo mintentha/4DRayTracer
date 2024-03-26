@@ -43,7 +43,9 @@ V4 hypernormal(V4 a, V4 b, V4 c) {
 float distToHyperplane(V4 o, V4 d, V4 n, V4 a) {
 
     V4 q = a - o;
-    return (-q*n)/(d*n);
+    float denom = (d * n);
+    if (denom == 0) return -1.0f;
+    return (q*n)/denom;
 
 }
 

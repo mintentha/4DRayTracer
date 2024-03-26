@@ -33,9 +33,9 @@ V4 Tetrahedron::getIntersection(V4 o, V4 dir, float *time) {
 }
 
 V4 Tetrahedron::getNormal() {
-	return hypernormal(this->abcd[1]-this->abcd[0], this->abcd[2]-this->abcd[0], this->abcd[3]-this->abcd[0]);
+	return hypernormal(this->abcd[1]-this->abcd[0], this->abcd[2]-this->abcd[0], this->abcd[3]-this->abcd[0]).normalized();
 }
 
 V4 Tetrahedron::getNormal(V4 p) {
-	return hypernormal(this->abcd[1]-this->abcd[0], this->abcd[2]-this->abcd[0], this->abcd[3]-this->abcd[0]);
+	return hypernormal(this->abcd[1]-this->abcd[0], this->abcd[2]-this->abcd[0], this->abcd[3]-this->abcd[0]).normalized();
 }
