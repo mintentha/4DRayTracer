@@ -18,9 +18,15 @@
     <ClInclude Include="V3.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="V4.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="V3.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="V4.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
