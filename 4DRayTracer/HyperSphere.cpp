@@ -1,5 +1,6 @@
 #include "HyperSphere.h"
 #include "V4.h"
+#include <math.h>
 
 HyperSphere::HyperSphere(V4 C, float r, Material material) {
 	this->C = C;

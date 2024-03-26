@@ -12,7 +12,7 @@ float det2(float a1, float a2, float b1, float b2) {
 
 float det3(V3 a, V3 b, V3 c) {
 
-    return a.x*(det2(b.y, b.z, c.y, c.z)) - a.y*(det2(b.x, b.z, c.x, c.z) + a.z*(det2(b.x, b.y, c.x, c.y)));
+    return a.x*(det2(b.y, b.z, c.y, c.z)) - a.y*(det2(b.x, b.z, c.x, c.z)) + a.z*(det2(b.x, b.y, c.x, c.y));
 
 }
 
@@ -55,7 +55,7 @@ V3 sysEq3Var(V4 a, V4 b, V4 c) {
     float d3 = det3(V3(a[0], a[1], a[3]), V3(b[0], b[1], b[3]), V3(c[0], c[1], c[3]));
 
     if (d == 0) {
-        return;
+        return V3(0.0f);
     } else {
         return V3(d1/d, d2/d, d3/d);
     }
