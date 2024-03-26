@@ -1,6 +1,5 @@
 #include "HyperSphere.h"
 #include "V4.h"
-#include <math.h>
 
 HyperSphere::HyperSphere(V4 C, float r) {
 	this->C = C;
@@ -18,8 +17,8 @@ V4 HyperSphere::getIntersection(V4 o, V4 dir, float *time) {
 		*time = -1.0f;
 		return V4(0.0f);
 	}
-	float t1 = (-b - sqrtf(disc))/2;
-	float t2 = (-b + sqrtf(disc))/2;
+	float t1 = -b - sqrtf(disc);
+	float t2 = -b + sqrtf(disc);
 	if (t1 > 0) {
 		*time = t1;
 		return o + dir * t1;
