@@ -1,4 +1,5 @@
 #include "V3.h"
+#include <math.h>
 
 V3::V3() {
 	V3(0.0f);
