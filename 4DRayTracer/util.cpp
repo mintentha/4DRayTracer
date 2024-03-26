@@ -69,3 +69,29 @@ float distToHypersphere(V4 o, V4 d, V4 c, float r) {
     }
 
 }
+
+V3 sysEq3Var(V4 a, V4 b, V4 c) {
+
+    float d = det3(pop(a, 3), pop(b, 3), pop(c, 3));
+    float d1 = det3(V3(a[3], a[1], a[2]), V3(b[3], b[1], b[2]), V3(c[3], c[1], c[2]));
+    float d2 = det3(V3(a[0], a[3], a[2]), V3(b[0], b[3], b[2]), V3(c[0], c[3], c[2]));
+    float d3 = det3(V3(a[0], a[1], a[3]), V3(b[0], b[1], b[3]), V3(c[0], c[1], c[3]));
+
+    if (d == 0) {
+        return;
+    } else {
+        return V3(d1/d, d2/d, d3/d);
+    }
+
+}
+
+V4 bary4D(V4 p, V4 t1, V4 t2, V4 t3, V4 t4) {
+
+    V4 a = V4(t2.x-t1.x, t3.x-t1.x, t4.x-t1.x, p.x-t1.x);
+    V4 b = V4(t2.y-t1.y, t3.y-t1.y, t4.y-t1.y, p.y-t1.y);
+    V4 c = V4(t2.z-t1.z, t3.z-t1.z, t4.z-t1.z, p.z-t1.z);
+
+    V3 d = sysEq3Var(a, b, c);
+    return V4((1 - d.x - d.y - d.z), d.x, d.y, d.z);
+
+}
