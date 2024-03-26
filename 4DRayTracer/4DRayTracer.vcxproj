@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="HyperPlane.h" />
     <ClInclude Include="HyperSphere.h" />
     <ClInclude Include="M33.h" />
     <ClInclude Include="M44.h" />
