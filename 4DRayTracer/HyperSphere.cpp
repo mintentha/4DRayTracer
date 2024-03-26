@@ -19,8 +19,8 @@ V4 HyperSphere::getIntersection(V4 o, V4 dir, float *time) {
 		*time = -1.0f;
 		return V4(0.0f);
 	}
-	float t1 = -b - sqrtf(disc);
-	float t2 = -b + sqrtf(disc);
+	float t1 = (-b - sqrtf(disc))/2;
+	float t2 = (-b + sqrtf(disc))/2;
 	if (t1 > 0) {
 		*time = t1;
 		return o + dir * t1;
