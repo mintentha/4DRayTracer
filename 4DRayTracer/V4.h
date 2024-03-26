@@ -3,6 +3,8 @@
 #define _USE_MATH_DEFINES
 #include <iostream>
 
+#include "V3.h"
+
 class V4 {
 public:
 	float xyzw[4];
@@ -14,6 +16,8 @@ public:
 	V4(const V4& v);
 	V4(float x, float y, float z, float w);
 	V4(float f) : V4(f, f, f, f) {};
+	V4(V3 v, float w);
+	V4(V3 v) : V4(v, 0.0f) {};
 	float& operator[](int i);
 	V4& operator=(V4 v);
 	V4& operator+=(V4 v);

@@ -18,6 +18,13 @@ V4::V4(const V4& v) {
 	xyzw[3] = v.w;
 }
 
+V4::V4(V3 v, float w) {
+	xyzw[0] = v.x;
+	xyzw[1] = v.y;
+	xyzw[2] = v.z;
+	xyzw[3] = w;
+}
+
 float& V4::operator[](int i) {
 
 	return xyzw[i];
