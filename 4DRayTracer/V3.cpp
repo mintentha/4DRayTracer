@@ -154,7 +154,7 @@ V3 V3::normalized() {
 
 
 float V3::l2squared() {
-	return (x * x + y * y + z * z);
+	return *this * *this;
 }
 
 float V3::length() {

@@ -113,7 +113,7 @@ V4 operator%(V4 v1, V4 v2) {
 }
 
 float V4::operator*(V4 v) {
-	return x * v.x + y * v.y + z * v.z;
+	return x * v.x + y * v.y + z * v.z + w * v.w;
 }
 
 V4 V4::operator-() {
@@ -148,7 +148,7 @@ V4 V4::normalized() {
 
 
 float V4::l2squared() {
-	return (x * x + y * y + z * z + w * w);
+	return *this * *this;
 }
 
 float V4::length() {
