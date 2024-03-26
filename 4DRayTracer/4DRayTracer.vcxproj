@@ -17,6 +17,7 @@
     <ClInclude Include="M44.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Shape.h" />
+    <ClInclude Include="Tetrahedron.h" />
     <ClInclude Include="util.h" />
     <ClInclude Include="V3.h" />
     <ClInclude Include="V4.h" />
@@ -26,6 +27,7 @@
     <ClCompile Include="M33.cpp" />
     <ClCompile Include="M44.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Tetrahedron.cpp" />
     <ClCompile Include="util.cpp" />
     <ClCompile Include="V3.cpp" />
     <ClCompile Include="V4.cpp" />
