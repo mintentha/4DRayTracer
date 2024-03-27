@@ -26,7 +26,7 @@ void main() {
     tet3->material = &material;
     hs->material = &material;
     hs2->material = &material;
-    Scene* scene = new Scene(ppc, V3(0.0f), 1);
+    Scene* scene = new Scene(ppc, V3(0.0f), 2);
     FrameBuffer* fb = new FrameBuffer(1028, 1028);
     scene->AddShape(hs);
     scene->AddShape(hs2);
