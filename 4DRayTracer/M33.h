@@ -34,6 +34,7 @@ public:
 	M33 Transposed();
 	M33& Invert();
 	M33& Transpose();
+	float determinant();
 	friend std::ostream& operator<<(std::ostream& ostr, M33& mat);
 	friend std::istream& operator>>(std::istream& istr, M33& mat);
 };

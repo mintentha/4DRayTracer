@@ -110,9 +110,11 @@ V3 operator/(V3 v1, float scf) {
 }
 
 V3 V3::operator^(V3 v) {
-	return V3(y * v.z - z * v.y,
+	return V3(
+		y * v.z - z * v.y,
 		z * v.x - x * v.z,
-		x * v.y - y * v.x);
+		x * v.y - y * v.x
+	);
 }
 
 V3 operator%(V3 v1, V3 v2) {

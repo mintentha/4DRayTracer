@@ -1,6 +1,7 @@
 #pragma once
 
 #include "V4.h"
+#include "M33.h"
 
 #include <iostream>
 
@@ -28,12 +29,13 @@ public:
 	friend M44 operator*(M44 mat1, float scf);
 	friend M44 operator*(float scf, M44 mat1);
 	friend M44 operator%(M44 mat1, M44 mat2);
-
 	V4 operator*(V4 v);
-	//M44 Inverted();
+	M33 SubMatrix(int i, int j);
+	M44 Inverted();
 	M44 Transposed();
-	//M44& Invert();
+	M44& Invert();
 	M44& Transpose();
+	float determinant();
 	friend std::ostream& operator<<(std::ostream& ostr, M44& mat);
 	friend std::istream& operator>>(std::istream& istr, M44& mat);
 };

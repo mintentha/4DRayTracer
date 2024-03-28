@@ -29,17 +29,6 @@ V3 pop(V4 a, int idx) {
 
 }
 
-V4 hypernormal(V4 a, V4 b, V4 c) {
-
-    float e[4] = {};
-    for (int i = 0; i < 4; i++) {
-        e[i] = det3(pop(a, i), pop(b, i), pop(c, i));
-    }
-
-    return V4(e[0], -e[1], e[2], -e[3]);
-
-}
-
 float distToHyperplane(V4 o, V4 d, V4 n, V4 a) {
 
     V4 q = a - o;
