@@ -17,7 +17,9 @@
     <ClInclude Include="M33.h" />
     <ClInclude Include="M44.h" />
     <ClInclude Include="Material.h" />
+    <ClInclude Include="PointLight.h" />
     <ClInclude Include="PPC.h" />
+    <ClInclude Include="printTest.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Shape.h" />
     <ClInclude Include="Tetrahedron.h" />
@@ -31,6 +33,8 @@
     <ClCompile Include="M33.cpp" />
     <ClCompile Include="M44.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="PointLight.cpp" />
+    <ClCompile Include="printTest.cpp" />
     <ClCompile Include="Tetrahedron.cpp" />
     <ClCompile Include="PPC.cpp" />
     <ClCompile Include="Scene.cpp" />

@@ -100,6 +100,8 @@ StyleCopReport.xml
 
 # Our specific exe
 4DRayTracer.exe
+output.tiff
+*/output.tiff
 
 # Chutzpah Test files
 _Chutzpah*
