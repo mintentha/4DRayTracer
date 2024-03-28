@@ -12,7 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FrameBuffer.h" />
-    <ClInclude Include="HyperPlane.h" />
+    <ClInclude Include="HyperQuad.h" />
     <ClInclude Include="HyperSphere.h" />
     <ClInclude Include="M33.h" />
     <ClInclude Include="M44.h" />
@@ -27,6 +27,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="FrameBuffer.cpp" />
+    <ClCompile Include="HyperQuad.cpp" />
     <ClCompile Include="HyperSphere.cpp" />
     <ClCompile Include="M33.cpp" />
     <ClCompile Include="M44.cpp" />
