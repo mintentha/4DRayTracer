@@ -5,6 +5,8 @@
 
 #include "V3.h"
 
+class V4Cross;
+
 class V4 {
 public:
 	float xyzw[4];
@@ -24,6 +26,7 @@ public:
 	V4& operator-=(V4 v);
 	V4& operator*=(float scf);
 	V4& operator/=(float scf);
+	V4& operator^=(V4Cross v23);
 	V4& operator%=(V4 v); // componentwise product
 	float operator*(V4 v); // dot product
 	bool operator==(V4 v);
@@ -38,10 +41,24 @@ public:
 	friend V4 operator%(V4 v1, V4 v2);
 	V4 operator-();
 	friend V4 operator*(float scf, V4 v);
+	friend V4Cross operator^(V4 v1, V4 v2);
+	friend V4 operator^(V4Cross v12, V4 v3);
+	friend V4 operator^(V4 v1, V4Cross v23);
 	friend std::ostream& operator<<(std::ostream& ostr, V4& v);
 	friend std::istream& operator>>(std::istream& istr, V4& v);
+	V4 cross(V4 v2, V4 v3);	// takes the "cross product" (not technically a cross product, but generates an orthogonal vector through the same process)
 	V4& normalize();
 	V4 normalized();
 	float l2squared(); // sum of squares
 	float length(); // square root of l2squared()
+};
+
+class V4Cross {
+private:
+	V4 v1;
+	V4 v2;
+public:
+	friend V4Cross operator^(V4 v1, V4 v2);
+	friend V4 operator^(V4Cross v12, V4 v3);
+	friend V4 operator^(V4 v1, V4Cross v23);
 };

@@ -130,8 +130,15 @@ M33& M33::Transpose() {
 	return *this;
 }
 
+float M33::determinant() {
+	return
+		rows[0][0] * (rows[1][1] * rows[2][2] - rows[1][2] * rows[2][1]) -
+		rows[0][1] * (rows[1][0] * rows[2][2] - rows[1][2] * rows[2][0]) +
+		rows[0][2] * (rows[1][0] * rows[2][1] - rows[1][1] * rows[2][0]);
+}
+
 std::ostream& operator<<(std::ostream& ostr, M33& mat) {
-	return ostr << mat[0] << " " << mat[1] << " " << mat[2];
+	return ostr << mat[0] << std::endl << mat[1] << std::endl << mat[2];
 }
 
 std::istream& operator>>(std::istream& istr, M33& mat) {
