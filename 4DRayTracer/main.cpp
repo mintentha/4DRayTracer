@@ -6,10 +6,6 @@
 #include "HyperQuad.h"
 #include "Tetrahedron.h"
 #include "Material.h"
-#include "V3.h"
-#include "V4.h"
-#include "M44.h"
-#include "M33.h"
 
 void main() {
     PPC* ppc = new PPC(120, 1920, 1080);
