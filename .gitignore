@@ -98,6 +98,9 @@ StyleCopReport.xml
 *.svclog
 *.scc
 
+# Our specific exe
+4DRayTracer.exe
+
 # Chutzpah Test files
 _Chutzpah*
 
