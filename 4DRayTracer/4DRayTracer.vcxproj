@@ -12,7 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FrameBuffer.h" />
-    <ClInclude Include="HyperPlane.h" />
+    <ClInclude Include="HyperQuad.h" />
     <ClInclude Include="HyperSphere.h" />
     <ClInclude Include="M33.h" />
     <ClInclude Include="M44.h" />
@@ -21,18 +21,17 @@
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Shape.h" />
     <ClInclude Include="Tetrahedron.h" />
-    <ClInclude Include="util.h" />
     <ClInclude Include="V3.h" />
     <ClInclude Include="V4.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="FrameBuffer.cpp" />
+    <ClCompile Include="HyperQuad.cpp" />
     <ClCompile Include="HyperSphere.cpp" />
     <ClCompile Include="M33.cpp" />
     <ClCompile Include="M44.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Tetrahedron.cpp" />
-    <ClCompile Include="util.cpp" />
     <ClCompile Include="PPC.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="V3.cpp" />
