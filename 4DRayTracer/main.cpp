@@ -9,7 +9,13 @@
 #include "V4.h"
 #include "printTest.h"
 
+#include <GLFW/glfw3.h>
 
+void main() {
+    glfwInit();
+}
+
+/*
 void main() {
     PPC* ppc = new PPC(120, 1028, 1028);
     ppc->SetPose(V3(0.0f), V3(0.0f, 0.0f, 50.0f), V3(0.0f, 1.0f, 0.0f));
@@ -36,5 +42,6 @@ void main() {
     scene->RenderRT(fb, 0.0f, 0.0f);
     fb->SaveAsTiff("output.tiff");
 
-    cmdLineTest();
+    //cmdLineTest();
 }
+*/
