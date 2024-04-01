@@ -1,115 +1,81 @@
-#include "ppc.h"
-#include "M33.h"
-#include "framebuffer.h"
+#include "PPC.h"
+#include "V4.h"
+#include "M44.h"
 
-PPC::PPC(float hfov, int _w, int _h) {
-
-	w = _w;
-	h = _h;
-	a = V3(1.0f, 0.0f, 0.0f); // horizontal
-	b = V3(0.0f, -1.0f, 0.0f); // vertical
-	C = V3(0.0f, 0.0f, 0.0f); // camera
+PPC::PPC(float hfov, int w, int h) {
+	this->w = w;
+	this->h = h;
+	a = V4(1.0f, 0.0f, 0.0f, 0.0f);
+	b = V4(0.0f, -1.0f, 0.0f, 0.0f);
+	c = V4(0.0f, 0.0f, 0.0f, 1.0f);
+	C = V4(0.0f);
 	float hfovRad = hfov * M_PI / 180.0f;
-	c = V3(-(float)w / 2.0f, (float)h / 2.0f, -(float)w / (2.0f * tanf(hfovRad / 2.0f)));
-	// depth
+	float fw = static_cast<float>(w);
+	float fh = static_cast<float>(h);
+	d = V4(-fw / 2.0f, fh / 2.0f, fw / (2.0f * tanf(hfovRad / 2.0f)), 0.0f);
 }
 
-int PPC::Project(V3 P, V3& pP) {
-	// 0 point behind head
-	// 1 point in front of head
-
-	M33 M;
-	M.SetColumn(0, a);
-	M.SetColumn(1, b);
-	M.SetColumn(2, c);
-
-	M33 Minv = M.Inverted();
-	V3 Q = Minv * (P - C);
-	if (Q[2] <= 0.0f)
-		return 0;
-
-	pP = V3(Q[0] / Q[2], Q[1] / Q[2], 1.0f / Q[2]);
-	return 1;
-
-}
-
-int PPC::UnProject(V3 pP, V3& P) {
-
-	if (pP[2] == 0.0f) {
-		return 0;
-	}
-
-	P = C + (a * pP[0] + b * pP[1] + c) / pP[2];
-
-	return 1;
-
-}
-
-float PPC::GetF() {
-
-	V3 vd = (a ^ b).normalized();
-	return c * vd;
-
-}
-
-void PPC::SetF(float f) {
-	// want f = c * (a^b)
-	c = c * f / GetF();
-}
-
-void PPC::SetPose(V3 newC, V3 LaP, V3 upgv) {
-	V3 newa, newb, newc;
-
-	V3 newvd = (LaP - newC).normalized();
-	newa = (newvd ^ upgv).normalized();
-	newb = (newvd ^ newa).normalized();
-	float f = GetF();
-	newc = newvd * f - newa * (float)(w / 2) - newb * (float)h / 2;
-
-	a = newa;
-	b = newb;
-	c = newc;
-	C = newC;
-}
-
-V3 PPC::getPos() {
+V4 PPC::getC() {
 	return C;
 }
 
-V3 PPC::GetVD() {
-	return (a ^ b).normalized();
+V4 PPC::getVD() {
+	// b is negative because b is down instead of up
+	// (I would make b down but pixels on screen start at top left)
+	return (a ^ -b ^ c).normalize();
 }
 
-V3 PPC::GetPixelCenter(int u, int v) {
-	return C + a * (.5f + (float)u) + b * (.5f + (float)v) + c;
+float PPC::getF() {
+	return d * getVD();
 }
 
-V3 PPC::GetRay(int u, int v) {
-	return (GetPixelCenter(u, v) - C).normalized();
+void PPC::setF(float f) {
+	d *= f / getF();
 }
 
-V3 PPC::GetRaySubPixel(float fu, float fv) {
-	return (a * fu + b * fv + c).normalized();
+void PPC::setPose(V4 C, V4 LaP, V4 upV, V4 anaV) {
+	V4 newVd = LaP - C;
+	newVd.normalize();
+	// y ^ z ^ w
+	V4 newa = upV ^ newVd ^ anaV;
+	newa.normalize();
+	// x ^ z ^ w
+	V4 newb = newa ^ newVd ^ anaV;
+	newb.normalize();
+	// x ^ y ^ z
+	V4 newc = newa ^ newb ^ newVd;
+	newc.normalize();
+
+	V4 newd = newVd * getF() - newa * static_cast<float>(w) / 2.0f - newb * static_cast<float>(h) / 2.0f;
+	a = newa;
+	b = newb;
+	c = newc;
+	d = newd;
+	this->C = c;
 }
 
-int PPC::getW() {
-	return w;
+V4 PPC::getRay(int u, int v) {
+	return getRaySubPixel(static_cast<float>(u) + 0.5f, static_cast<float>(v) + 0.5f);
 }
 
-int PPC::getH() {
-	return h;
+V4 PPC::getRaySubPixel(float fu, float fv) {
+	return (d + a * fu + b * fv).normalize();
 }
 
-// Still not perfect, TODO
+V4 PPC::getPixelCenter(int u, int v) {
+	return getSubPixelPoint(static_cast<float>(u) + 0.5f, static_cast<float>(v) + 0.5f);
+}
+
+V4 PPC::getSubPixelPoint(float fu, float fv) {
+	return C + d + a * fu + b * fv;
+}
+
 void PPC::resize(int w, int h) {
-	// oldW * oldH = 2 * tan(hfov/2) * oldF
-	// oldW * oldH / oldF = 2 * tan(hfov/2) = newW * newH / newF
-	// newF = oldF * newW * newH / (oldW * oldH)
 	int oldCanvSize = this->w * this->h;
 	int newCanvSize = w * h;
-	float oldF = GetF();
+	float oldF = getF();
 	this->w = w;
 	this->h = h;
 	float scaleF = static_cast<float>(newCanvSize) / static_cast<float>(oldCanvSize);
-	this->c = GetVD() * GetF() * sqrtf(scaleF) - a * (static_cast<float>(w) / 2) - b * (static_cast<float>(h) / 2);
+	this->d = getVD() * getF() * sqrtf(scaleF) - a * (static_cast<float>(w) / 2) - b * (static_cast<float>(h) / 2);
 }

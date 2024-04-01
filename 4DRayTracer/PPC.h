@@ -1,29 +1,39 @@
 #pragma once
 
-#include "V3.h"
-
-// For now, for the sake of immediate testing results, PPC is actually only in 3D space
-// And while raytracing we will give it a constant depth
-// Later on it can be adapted to be a 2D projection plane in 4D space
-// That just will take some math to figure out how to best accomplish that
+#include "V4.h"
+#include "M44.h"
 
 class PPC {
 private:
-	V3 a, b, c, C;
-	int w, h;
+	V4 a; // Right direction;
+	V4 b; // Up direction
+	V4 c; // Ana direction
+	// in 3d, we know that vd() (forward) is just a ^ b
+	// in 4d, we would either need to specify a forward direction, or an ana direction
+	// I chose to track ana
+	V4 d; // Points to top left of projection plane
+	V4 C; // Camera position
+	int w; // Width of projection plane
+	int h; // Height of projection plane
 public:
-	PPC(float hfov, int _w, int _h);
-	int Project(V3 P, V3& pP);
-	int UnProject(V3 pP, V3& P);
-	void SetPose(V3 newC, V3 LaP, V3 upgv);
-	float GetF();
-	int getW();
-	int getH();
+	PPC(float hfov, int w, int h);
+
+	/*
+	* Havent implemented these, we dont really need them.
+	* For the 3d PPC these were leftover from a projection-based renderer
+	// p - point, pP - pointer to projected Point. Returns true if point in front of camera
+	bool project(V4 p, V4* pP);
+	bool unproject(V4 p, V4* P);
+	*/
+
+	V4 getC(); // Get Camera Center
+	V4 getVD(); // Get view direction (i.e. forward)
+	float getF(); // Get focal length
+	void setF(float f);
+	void setPose(V4 C, V4 LaP, V4 upV, V4 anaV);
+	V4 getRay(int u, int v);
+	V4 getRaySubPixel(float fu, float fv);
+	V4 getPixelCenter(int u, int v);
+	V4 getSubPixelPoint(float fu, float fv);
 	void resize(int w, int h);
-	void SetF(float f);
-	V3 GetVD();
-	V3 getPos();
-	V3 GetPixelCenter(int u, int v);
-	V3 GetRay(int u, int v);
-	V3 GetRaySubPixel(float fu, float fv);
 };

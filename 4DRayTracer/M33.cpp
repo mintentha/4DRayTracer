@@ -137,8 +137,8 @@ float M33::determinant() {
 		rows[0][2] * (rows[1][0] * rows[2][1] - rows[1][1] * rows[2][0]);
 }
 
-std::ostream& operator<<(std::ostream& ostr, M33& mat) {
-	return ostr << mat[0] << std::endl << mat[1] << std::endl << mat[2];
+std::ostream& operator<<(std::ostream& ostr, const M33& mat) {
+	return ostr << mat.rows[0] << std::endl << mat.rows[1] << std::endl << mat.rows[2];
 }
 
 std::istream& operator>>(std::istream& istr, M33& mat) {

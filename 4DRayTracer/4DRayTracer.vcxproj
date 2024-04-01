@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="PPC.h" />
     <ClInclude Include="RTWindow.h" />
     <ClInclude Include="FrameBuffer.h" />
     <ClInclude Include="HyperQuad.h" />
@@ -19,7 +20,6 @@
     <ClInclude Include="M44.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="PointLight.h" />
-    <ClInclude Include="PPC.h" />
     <ClInclude Include="printTest.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Shape.h" />
@@ -28,6 +28,7 @@
     <ClInclude Include="V4.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="PPC.cpp" />
     <ClCompile Include="RTWindow.cpp" />
     <ClCompile Include="externals\glad\src\gl.c" />
     <ClCompile Include="FrameBuffer.cpp" />
@@ -39,7 +40,6 @@
     <ClCompile Include="PointLight.cpp" />
     <ClCompile Include="printTest.cpp" />
     <ClCompile Include="Tetrahedron.cpp" />
-    <ClCompile Include="PPC.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="V3.cpp" />
     <ClCompile Include="V4.cpp" />

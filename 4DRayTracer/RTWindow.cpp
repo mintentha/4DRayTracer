@@ -18,8 +18,6 @@ RTWindow::RTWindow(const char* name, int width, int height, float samplesPerPixe
 	this->ppc = ppc;
 	this->ppc->resize(fbWidth, fbHeight);
 	this->scene = scene;
-	ow = 0.0f;
-	dw = 0.0f;
 	textureID = 0;
 	texFBO = 0;
 	error = OK;
@@ -133,7 +131,7 @@ bool RTWindow::isShown() {
 }
 
 void RTWindow::draw() {
-	scene->RenderRT(ppc, fb, ow, dw);
+	scene->RenderRT(ppc, fb);
 	glfwMakeContextCurrent(window);
 	glViewport(0, 0, vpWidth, vpHeight);
 	glClear(GL_COLOR_BUFFER_BIT);

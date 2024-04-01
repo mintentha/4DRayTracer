@@ -194,9 +194,9 @@ float M44::determinant() {
 		   rows[0][3] * SubMatrix(0, 3).determinant();
 }
 
-std::ostream& operator<<(std::ostream& ostr, M44& mat) {
+std::ostream& operator<<(std::ostream& ostr, const M44& mat) {
 
-	return ostr << mat[0] << std::endl << mat[1] << std::endl << mat[2] << std::endl << mat[3];
+	return ostr << mat.rows[0] << std::endl << mat.rows[1] << std::endl << mat.rows[2] << std::endl << mat.rows[3];
 
 }
 

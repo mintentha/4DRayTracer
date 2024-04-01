@@ -36,7 +36,7 @@ public:
 	friend V3 operator%(V3 v1, V3 v2);
 	V3 operator-();
 	friend V3 operator*(float scf, V3 v);
-	friend std::ostream& operator<<(std::ostream& ostr, V3& v);
+	friend std::ostream& operator<<(std::ostream& ostr, const V3& v);
 	friend std::istream& operator>>(std::istream& istr, V3& v);
 	V3& normalize();
 	V3 normalized();

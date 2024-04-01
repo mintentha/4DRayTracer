@@ -4,6 +4,8 @@
 #include "Tetrahedron.h"
 #include "HyperSphere.h"
 
+#include "PPC.h"
+
 #include <iostream>
 
 #include <glad/gl.h>
@@ -21,7 +23,7 @@ void main() {
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     PPC* ppc = new PPC(120, WIDTH, HEIGHT);
-    ppc->SetPose(V3(0.0f), V3(0.0f, 0.0f, 50.0f), V3(0.0f, 1.0f, 0.0f));
+    ppc->setPose(V4(0.0f), V4(0.0f, 0.0f, 50.0f, 0.0f), V4(0.0f, 1.0f, 0.0f, 0.0f), V4(0.0f, 0.0f, 0.0f, 1.0f));
     Material material;
     material.diffuse = V3(1.0f, 0.0f, 0.0f);
     HyperSphere* hs = new HyperSphere(V4(0.0f, 0.0f, 50.0f, 0.0f), 10.0f);
@@ -42,7 +44,7 @@ void main() {
     scene->AddShape(tet2);
     scene->AddShape(tet3);
     // cmdLineTest();
-    RTWindow* window = new RTWindow(WIDTH, HEIGHT, 4, RTWindow::TRUE, ppc, scene);
+    RTWindow* window = new RTWindow(WIDTH, HEIGHT, 1, RTWindow::TRUE, ppc, scene);
     RTWindow::ERROR error = window->hasError();
     switch (error) {
         case RTWindow::CREATE_WINDOW:

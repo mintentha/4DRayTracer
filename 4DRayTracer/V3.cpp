@@ -133,14 +133,14 @@ V3 operator*(float scf, V3 v) {
 	return v * scf;
 }
 
-std::ostream& operator<<(std::ostream& ostr, V3& v) {
+std::ostream& operator<<(std::ostream& ostr, const V3& v) {
 
-	return ostr << v[0] << " " << v[1] << " " << v[2];
+	return ostr << v.x << " " << v.y << " " << v.z;
 
 }
 
 std::istream& operator>>(std::istream& istr, V3& v) {
-	return istr >> v[0] >> v[1] >> v[2];
+	return istr >> v.x >> v.y >> v.z;
 }
 
 V3 &V3::normalize() {

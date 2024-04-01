@@ -44,7 +44,7 @@ public:
 	friend V4Cross operator^(V4 v1, V4 v2);
 	friend V4 operator^(V4Cross v12, V4 v3);
 	friend V4 operator^(V4 v1, V4Cross v23);
-	friend std::ostream& operator<<(std::ostream& ostr, V4& v);
+	friend std::ostream& operator<<(std::ostream& ostr, const V4& v);
 	friend std::istream& operator>>(std::istream& istr, V4& v);
 	V4 cross(V4 v2, V4 v3);	// takes the "cross product" (not technically a cross product, but generates an orthogonal vector through the same process)
 	V4& normalize();
