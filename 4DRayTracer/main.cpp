@@ -42,8 +42,7 @@ void main() {
     scene->AddShape(tet2);
     scene->AddShape(tet3);
     // cmdLineTest();
-    FrameBuffer* fb = new FrameBuffer(WIDTH, HEIGHT);
-    RTWindow* window = new RTWindow(WIDTH, HEIGHT, 1.5, RTWindow::RATIO_LOCKED, ppc, scene);
+    RTWindow* window = new RTWindow(WIDTH, HEIGHT, 4, RTWindow::TRUE, ppc, scene);
     RTWindow::ERROR error = window->hasError();
     switch (error) {
         case RTWindow::CREATE_WINDOW:
@@ -51,7 +50,6 @@ void main() {
             glfwTerminate();
             delete scene;
             delete ppc;
-            delete fb;
             delete window;
             return;
         case RTWindow::LOAD_GL:
@@ -59,7 +57,6 @@ void main() {
             glfwTerminate();
             delete scene;
             delete ppc;
-            delete fb;
             delete window;
             return;
     }

@@ -16,6 +16,7 @@ RTWindow::RTWindow(const char* name, int width, int height, float samplesPerPixe
 	this->vpWidth = width;
 	this->vpHeight = height;
 	this->ppc = ppc;
+	this->ppc->resize(fbWidth, fbHeight);
 	this->scene = scene;
 	ow = 0.0f;
 	dw = 0.0f;
@@ -23,14 +24,14 @@ RTWindow::RTWindow(const char* name, int width, int height, float samplesPerPixe
 	texFBO = 0;
 	error = OK;
 	isOpen = false;
-	fb = new FrameBuffer(width, height);
+	fb = new FrameBuffer(fbWidth, fbHeight);
 	if (resizeMode == OFF) {
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 	}
 	else {
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 	}
-	window = glfwCreateWindow(width, height, name, NULL, NULL);
+	window = glfwCreateWindow(vpWidth, vpHeight, name, NULL, NULL);
 	if (window == nullptr) {
 		error = CREATE_WINDOW;
 		return;
@@ -52,7 +53,7 @@ RTWindow::RTWindow(const char* name, int width, int height, float samplesPerPixe
 	glfwSetScrollCallback(window, scrollCallback);
 	glfwSetFramebufferSizeCallback(window, fbSizeCallback);
 	if (resizeMode == RATIO_LOCKED || resizeMode == SS_RATIO_LOCKED) {
-		glfwSetWindowAspectRatio(window, width, height);
+		glfwSetWindowAspectRatio(window, vpWidth, vpHeight);
 	}
 	glGenTextures(1, &textureID);
 	glBindTexture(GL_TEXTURE_2D, textureID);

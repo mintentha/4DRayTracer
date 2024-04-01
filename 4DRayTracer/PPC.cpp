@@ -105,14 +105,11 @@ void PPC::resize(int w, int h) {
 	// oldW * oldH = 2 * tan(hfov/2) * oldF
 	// oldW * oldH / oldF = 2 * tan(hfov/2) = newW * newH / newF
 	// newF = oldF * newW * newH / (oldW * oldH)
-	int oldW = this->w;
-	int oldH = this->h;
-	int oldCanvSize = oldW * oldH;
+	int oldCanvSize = this->w * this->h;
 	int newCanvSize = w * h;
 	float oldF = GetF();
 	this->w = w;
 	this->h = h;
-	//this->c = GetVD() * GetF() - a * (static_cast<float>(w) / 2) - b * (static_cast<float>(h) / 2);
-	c += a * (oldW - w) / 2.0f + b * (oldH - h) / 2.0f;
-	SetF(oldF * static_cast<float>(newCanvSize) / static_cast<float>(oldCanvSize));
+	float scaleF = static_cast<float>(newCanvSize) / static_cast<float>(oldCanvSize);
+	this->c = GetVD() * GetF() * sqrtf(scaleF) - a * (static_cast<float>(w) / 2) - b * (static_cast<float>(h) / 2);
 }

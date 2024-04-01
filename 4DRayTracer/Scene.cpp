@@ -73,8 +73,8 @@ V3 Scene::RayTrace(V4 o, V4 dir, size_t depth) {
 }
 
 void Scene::RenderRT(PPC *ppc, FrameBuffer* fb, float ow, float dw) {
-	for (size_t u = 0; u < ppc->getW(); u++) {
-		for (size_t v = 0; v < ppc->getH(); v++) {
+	for (size_t u = 0; u < fb->getW(); u++) {
+		for (size_t v = 0; v < fb->getH(); v++) {
 			V3 col = RayTrace(V4(ppc->getPos(), ow), V4(ppc->GetRay(u, v), dw), maxDepth);
 			col.x = fminf(col.x, 1.0f);
 			col.y = fminf(col.y, 1.0f);
