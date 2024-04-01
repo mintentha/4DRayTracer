@@ -8,9 +8,10 @@
 // That just will take some math to figure out how to best accomplish that
 
 class PPC {
-public:
+private:
 	V3 a, b, c, C;
 	int w, h;
+public:
 	PPC(float hfov, int _w, int _h);
 	int Project(V3 P, V3& pP);
 	int UnProject(V3 pP, V3& P);
@@ -18,6 +19,7 @@ public:
 	float GetF();
 	int getW();
 	int getH();
+	void resize(int w, int h);
 	void SetF(float f);
 	V3 GetVD();
 	V3 getPos();

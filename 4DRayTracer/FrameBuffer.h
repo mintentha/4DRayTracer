@@ -14,13 +14,8 @@ public:
 	void SetColor(int u, int v, unsigned int col);
 	void SetColor(int u, int v, V3 col);
 	unsigned int getColor(int u, int v);
-
-	unsigned int getW() {
-		return w;
-	}
-
-	unsigned int getH() {
-		return h;
-	}
+	unsigned int getW();
+	unsigned int getH();
+	void resize(int w, int h); // does not keep data
 	void SaveAsTiff(const char* fname);
 };
