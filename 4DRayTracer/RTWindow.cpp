@@ -18,8 +18,6 @@ RTWindow::RTWindow(const char* name, int width, int height, float samplesPerPixe
 	this->ppc = ppc;
 	this->ppc->resize(fbWidth, fbHeight);
 	this->scene = scene;
-	ow = 0.0f;
-	dw = 0.0f;
 	textureID = 0;
 	texFBO = 0;
 	error = OK;
@@ -72,6 +70,17 @@ RTWindow::~RTWindow() {
 // We aren't necessarily using all of these callback functions, but it is nice to have them
 void RTWindow::kbdCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
 	RTWindow* rtw = static_cast<RTWindow*>(glfwGetWindowUserPointer(window));
+
+	switch (action) {
+		case GLFW_PRESS:
+			std::cout << "Pressed: " << key << "\n";
+			rtw->ppc->press(key);
+			break;
+		case GLFW_RELEASE:
+			std::cout << "Released: " << key << "\n";
+			rtw->ppc->release(key);
+			break;
+	}
 }
 
 void RTWindow::mouseCallback(GLFWwindow* window, double x, double y) {
@@ -133,7 +142,7 @@ bool RTWindow::isShown() {
 }
 
 void RTWindow::draw() {
-	scene->RenderRT(ppc, fb, ow, dw);
+	scene->RenderRT(ppc, fb);
 	glfwMakeContextCurrent(window);
 	glViewport(0, 0, vpWidth, vpHeight);
 	glClear(GL_COLOR_BUFFER_BIT);

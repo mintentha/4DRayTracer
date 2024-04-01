@@ -172,14 +172,14 @@ V4 operator^(V4 v1, V4Cross v12) {
 	return v1.cross(v2, v3);
 }
 
-std::ostream& operator<<(std::ostream& ostr, V4& v) {
+std::ostream& operator<<(std::ostream& ostr, const V4& v) {
 
-	return ostr << v[0] << " " << v[1] << " " << v[2] << " " << v[3];
+	return ostr << v.x << " " << v.y << " " << v.z << " " << v.w;
 
 }
 
 std::istream& operator>>(std::istream& istr, V4& v) {
-	return istr >> v[0] >> v[1] >> v[2] >> v[3];
+	return istr >> v.x >> v.y >> v.z >> v.w;
 }
 
 V4& V4::normalize() {

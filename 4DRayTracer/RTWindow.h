@@ -21,8 +21,6 @@ private:
 	bool isOpen;
 	// both of these are temporary, later refactor PPC to exist in 4D space. Also add rotation matrices
 	// For now this just helps with controlling the tanslation, which can be done in kbdCallback
-	float ow; // w component of ray origin
-	float dw; // w component of ray direction
 	// callback functions
 	static void kbdCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
 	static void mouseCallback(GLFWwindow* window, double x, double y);
