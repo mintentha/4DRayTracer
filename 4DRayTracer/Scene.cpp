@@ -6,8 +6,7 @@
 #include "V3.h"
 #include "V4.h"
 
-Scene::Scene(PPC* ppc, V3 bgrCol, size_t maxDepth, std::vector<Shape*>* shapes) {
-	this->ppc = ppc;
+Scene::Scene(V3 bgrCol, size_t maxDepth, std::vector<Shape*>* shapes) {
 	this->bgrCol = bgrCol;
 	this->maxDepth = maxDepth;
 	this->shapes = shapes;
@@ -19,7 +18,6 @@ Scene::~Scene() {
 		shapes->pop_back();
 	}
 	delete shapes;
-	delete ppc;
 }
 
 
@@ -30,22 +28,22 @@ void Scene::AddShape(Shape* shape) {
 V4 Scene::intersect(Shape* curShape, V4 o, V4 dir, Shape** shape, float* time) {
 	float curTime = -1.0f;
 	float closestTime = -1.0f;
-	size_t closestShape = 0;
+	Shape* closestShape = 0;
 	V4 closestP(0.0f);
-	for (size_t i = 0; i < shapes->size(); i++) {
-		if (shapes->at(i) == curShape) {
+	for (auto &shapeIt : (*shapes)) {
+		if (shapeIt == curShape) {
 			continue;
 		}
-		V4 p = shapes->at(i)->getIntersection(o, dir, &curTime);
+		V4 p = shapeIt->getIntersection(o, dir, &curTime);
 		if ((closestTime < 0 && curTime > 0) ||
 			(curTime > 0 && curTime < closestTime)) {
 			closestTime = curTime;
-			closestShape = i;
+			closestShape = shapeIt;
 			closestP = p;
 		}
 	}
 	*time = closestTime;
-	*shape = shapes->at(closestShape);
+	*shape = closestShape;
 	return closestP;
 }
 
@@ -74,9 +72,9 @@ V3 Scene::RayTrace(V4 o, V4 dir, size_t depth) {
 	return RayTrace(nullptr, o, dir, depth);
 }
 
-void Scene::RenderRT(FrameBuffer* fb, float ow, float dw) {
-	for (size_t u = 0; u < ppc->getW(); u++) {
-		for (size_t v = 0; v < ppc->getH(); v++) {
+void Scene::RenderRT(PPC *ppc, FrameBuffer* fb, float ow, float dw) {
+	for (size_t u = 0; u < fb->getW(); u++) {
+		for (size_t v = 0; v < fb->getH(); v++) {
 			V3 col = RayTrace(V4(ppc->getPos(), ow), V4(ppc->GetRay(u, v), dw), maxDepth);
 			col.x = fminf(col.x, 1.0f);
 			col.y = fminf(col.y, 1.0f);

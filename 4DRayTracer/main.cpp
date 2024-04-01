@@ -1,17 +1,26 @@
-#include "FrameBuffer.h"
 #include "PPC.h"
 #include "Scene.h"
-#include "Shape.h"
-#include "HyperSphere.h"
+#include "RTWindow.h"
 #include "Tetrahedron.h"
-#include "Material.h"
-#include "V3.h"
-#include "V4.h"
-#include "printTest.h"
+#include "HyperSphere.h"
 
+#include <iostream>
+
+#include <glad/gl.h>
+#include <GLFW/glfw3.h>
+
+#define WIDTH 640
+#define HEIGHT 360
 
 void main() {
-    PPC* ppc = new PPC(120, 1028, 1028);
+    glfwInit();
+    // Set all the required options for GLFW
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+    // OpenGL verison 4.6
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+    PPC* ppc = new PPC(120, WIDTH, HEIGHT);
     ppc->SetPose(V3(0.0f), V3(0.0f, 0.0f, 50.0f), V3(0.0f, 1.0f, 0.0f));
     Material material;
     material.diffuse = V3(1.0f, 0.0f, 0.0f);
@@ -26,15 +35,49 @@ void main() {
     tet3->material = &material;
     hs->material = &material;
     hs2->material = &material;
-    Scene* scene = new Scene(ppc, V3(0.0f), 2);
-    FrameBuffer* fb = new FrameBuffer(1028, 1028);
+    Scene* scene = new Scene(V3(0.0f), 2);
     scene->AddShape(hs);
     scene->AddShape(hs2);
     scene->AddShape(tet);
     scene->AddShape(tet2);
     scene->AddShape(tet3);
-    scene->RenderRT(fb, 0.0f, 0.0f);
-    fb->SaveAsTiff("output.tiff");
+    // cmdLineTest();
+    RTWindow* window = new RTWindow(WIDTH, HEIGHT, 4, RTWindow::TRUE, ppc, scene);
+    RTWindow::ERROR error = window->hasError();
+    switch (error) {
+        case RTWindow::CREATE_WINDOW:
+            std::cout << "Failed to create GLFW window" << std::endl;
+            glfwTerminate();
+            delete scene;
+            delete ppc;
+            delete window;
+            return;
+        case RTWindow::LOAD_GL:
+            std::cout << "Failed to initialize OpenGL context" << std::endl;
+            glfwTerminate();
+            delete scene;
+            delete ppc;
+            delete window;
+            return;
+    }
 
-    cmdLineTest();
+    // We are actually fully capable of running multiple instances
+    // of our raytracer simultaneously bc of how we abstracted it
+    // and they keyboard controls are separate for each of them
+    /*
+    PPC* ppc2 = new PPC(120, WIDTH, HEIGHT);
+    ppc2->SetPose(V3(0.0f), V3(0.0f, 0.0f, 50.0f), V3(0.0f, 1.0f, 0.0f));
+    RTWindow* window2 = new RTWindow(WIDTH, HEIGHT, ppc2, scene);
+    */
+
+    int i = 0;
+    while (!window->shouldClose()) {
+        window->draw();
+
+        //window2->draw();
+        
+        // Writing to console is actually slow but it is helpful to know whats going on
+        std::cout << "\rFrame " << ++i << std::flush;
+    }
+    glfwTerminate();
 }

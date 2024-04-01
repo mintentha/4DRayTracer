@@ -31,6 +31,21 @@ unsigned int FrameBuffer::getColor(int u, int v) {
 	return pix[uv];
 }
 
+unsigned int FrameBuffer::getW() {
+	return w;
+}
+
+unsigned int FrameBuffer::getH() {
+	return h;
+}
+
+void FrameBuffer::resize(int w, int h) {
+	delete[] pix;
+	this->w = w;
+	this->h = h;
+	pix = new unsigned int[w * h];
+}
+
 void FrameBuffer::SaveAsTiff(const char* fname) {
 
 	TIFF* out = TIFFOpen(fname, "w");
