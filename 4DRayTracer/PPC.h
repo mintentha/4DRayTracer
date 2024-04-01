@@ -15,6 +15,7 @@ private:
 	V4 C; // Camera position
 	int w; // Width of projection plane
 	int h; // Height of projection plane
+	float left, right, back, front, down, up, out, in;
 public:
 	PPC(float hfov, int w, int h);
 
@@ -36,4 +37,7 @@ public:
 	V4 getPixelCenter(int u, int v);
 	V4 getSubPixelPoint(float fu, float fv);
 	void resize(int w, int h);
+	void press(int key);
+	void release(int key);
+	void updateC();
 };

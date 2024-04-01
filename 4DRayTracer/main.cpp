@@ -11,8 +11,8 @@
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>
 
-#define WIDTH 640
-#define HEIGHT 360
+#define WIDTH 200
+#define HEIGHT 140
 
 void main() {
     glfwInit();
@@ -74,12 +74,13 @@ void main() {
 
     int i = 0;
     while (!window->shouldClose()) {
+        window->ppc->updateC();
         window->draw();
 
         //window2->draw();
         
         // Writing to console is actually slow but it is helpful to know whats going on
-        std::cout << "\rFrame " << ++i << std::flush;
+        std::cout << "\rFrame " << ++i << "\n" << std::flush;
     }
     glfwTerminate();
 }

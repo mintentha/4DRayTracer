@@ -1,6 +1,7 @@
 #include "PPC.h"
 #include "V4.h"
 #include "M44.h"
+#include <GLFW/glfw3.h>
 
 PPC::PPC(float hfov, int w, int h) {
 	this->w = w;
@@ -59,7 +60,7 @@ V4 PPC::getRay(int u, int v) {
 }
 
 V4 PPC::getRaySubPixel(float fu, float fv) {
-	return (d + a * fu + b * fv).normalize();
+	return (d + a * fu + b * fv + c * (fu + fv)/10).normalize();
 }
 
 V4 PPC::getPixelCenter(int u, int v) {
@@ -78,4 +79,94 @@ void PPC::resize(int w, int h) {
 	this->h = h;
 	float scaleF = static_cast<float>(newCanvSize) / static_cast<float>(oldCanvSize);
 	this->d = getVD() * getF() * sqrtf(scaleF) - a * (static_cast<float>(w) / 2) - b * (static_cast<float>(h) / 2);
+}
+
+void PPC::press(int key) {
+	switch (key) {
+		case GLFW_KEY_A:
+			this->left = true;
+			break;
+		case GLFW_KEY_D:
+			this->right = true;
+			break;
+		case GLFW_KEY_W:
+			this->front = true;
+			break;
+		case GLFW_KEY_S:
+			this->back = true;
+			break;
+		case GLFW_KEY_SPACE:
+			this->up = true;
+			break;
+		case GLFW_KEY_LEFT_SHIFT:
+			this->down = true;
+			break;
+		case GLFW_KEY_Q:
+			this->in = true;
+			break;
+		case GLFW_KEY_E:
+			this->out = true;
+			break;
+	}
+}
+
+void PPC::release(int key) {
+	switch (key) {
+		case GLFW_KEY_A:
+			this->left = false;
+			break;
+		case GLFW_KEY_D:
+			this->right = false;
+			break;
+		case GLFW_KEY_W:
+			this->front = false;
+			break;
+		case GLFW_KEY_S:
+			this->back = false;
+			break;
+		case GLFW_KEY_SPACE:
+			this->up = false;
+			break;
+		case GLFW_KEY_LEFT_SHIFT:
+			this->down = false;
+			break;
+		case GLFW_KEY_Q:
+			this->in = false;
+			break;
+		case GLFW_KEY_E:
+			this->out = false;
+			break;
+	}
+}
+
+void PPC::updateC() {
+	std::cout << this->left << this->right << this->front << this->back << this->up << this->down << this->in << this->out << "\n";
+
+	V4 mov = V4(0.0f);
+	if (this->left && !this->right) {
+		mov.x -= 0.5f;
+	}
+	if (this->right && !this->left) {
+		mov.x += 0.5f;
+	}
+	if (this->down && !this->up) {
+		mov.y -= 0.5f;
+	}
+	if (this->up && !this->down) {
+		mov.y += 0.5f;
+	}
+	if (this->back && !this->front) {
+		mov.z -= 0.5f;
+	}
+	if (this->front && !this->back) {
+		mov.z += 0.5f;
+	}
+	if (this->out && !this->in) {
+		mov.w -= 0.5f;
+	}
+	if (this->in && !this->out) {
+		mov.w += 0.5f;
+	}
+
+	this->C += mov;
 }

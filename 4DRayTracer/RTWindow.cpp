@@ -70,6 +70,17 @@ RTWindow::~RTWindow() {
 // We aren't necessarily using all of these callback functions, but it is nice to have them
 void RTWindow::kbdCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
 	RTWindow* rtw = static_cast<RTWindow*>(glfwGetWindowUserPointer(window));
+
+	switch (action) {
+		case GLFW_PRESS:
+			std::cout << "Pressed: " << key << "\n";
+			rtw->ppc->press(key);
+			break;
+		case GLFW_RELEASE:
+			std::cout << "Released: " << key << "\n";
+			rtw->ppc->release(key);
+			break;
+	}
 }
 
 void RTWindow::mouseCallback(GLFWwindow* window, double x, double y) {
