@@ -5,10 +5,9 @@ class FrameBuffer {
 private:
 	unsigned int w;
 	unsigned int h;
+public:
 	unsigned int* pix;
 	unsigned int& operator[](int i);
-
-public:
 	FrameBuffer(unsigned int w, unsigned int h);
 	~FrameBuffer();
 

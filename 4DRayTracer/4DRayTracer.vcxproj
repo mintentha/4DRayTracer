@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="RTWindow.h" />
     <ClInclude Include="FrameBuffer.h" />
     <ClInclude Include="HyperQuad.h" />
     <ClInclude Include="HyperSphere.h" />
@@ -27,6 +28,8 @@
     <ClInclude Include="V4.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="RTWindow.cpp" />
+    <ClCompile Include="externals\glad\src\gl.c" />
     <ClCompile Include="FrameBuffer.cpp" />
     <ClCompile Include="HyperQuad.cpp" />
     <ClCompile Include="HyperSphere.cpp" />
@@ -83,7 +86,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>externals\glfw\include;externals\libtiff\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>externals\glad\include;externals\glfw\include;externals\libtiff\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -100,7 +103,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>externals\glfw\include;externals\libtiff\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>externals\glad\include;externals\glfw\include;externals\libtiff\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
