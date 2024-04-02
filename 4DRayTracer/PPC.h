@@ -29,9 +29,13 @@ public:
 
 	V4 getC(); // Get Camera Center
 	V4 getVD(); // Get view direction (i.e. forward)
+	V4 geta();
+	V4 getb();
+	V4 getc();
 	float getF(); // Get focal length
 	void setF(float f);
 	void setPose(V4 C, V4 LaP, V4 upV, V4 anaV);
+	void setPose(V4 a, V4 b, V4 c);
 	V4 getRay(int u, int v);
 	V4 getRaySubPixel(float fu, float fv);
 	V4 getPixelCenter(int u, int v);

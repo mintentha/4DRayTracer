@@ -16,6 +16,18 @@ PPC::PPC(float hfov, int w, int h) {
 	d = V4(-fw / 2.0f, fh / 2.0f, fw / (2.0f * tanf(hfovRad / 2.0f)), 0.0f);
 }
 
+V4 PPC::geta() {
+	return a.normalize();
+}
+
+V4 PPC::getb() {
+	return b.normalize();
+}
+
+V4 PPC::getc() {
+	return c.normalize();
+}
+
 V4 PPC::getC() {
 	return C;
 }
@@ -53,6 +65,14 @@ void PPC::setPose(V4 C, V4 LaP, V4 upV, V4 anaV) {
 	c = newc;
 	d = newd;
 	this->C = c;
+}
+
+void PPC::setPose(V4 _a, V4 _b, V4 _c) {
+	a = _a.normalized();
+	b = _b.normalized();
+	c = _c.normalized();
+	V4 vd = (a ^ b ^ c).normalized();
+	d = vd * getF() - a * static_cast<float>(w) / 2.0f - b * static_cast<float>(h) / 2.0f;
 }
 
 V4 PPC::getRay(int u, int v) {
@@ -98,7 +118,7 @@ void PPC::press(int key) {
 		case GLFW_KEY_SPACE:
 			this->up = true;
 			break;
-		case GLFW_KEY_LEFT_SHIFT:
+		case GLFW_KEY_LEFT_CONTROL:
 			this->down = true;
 			break;
 		case GLFW_KEY_Q:
@@ -127,7 +147,7 @@ void PPC::release(int key) {
 		case GLFW_KEY_SPACE:
 			this->up = false;
 			break;
-		case GLFW_KEY_LEFT_SHIFT:
+		case GLFW_KEY_LEFT_CONTROL:
 			this->down = false;
 			break;
 		case GLFW_KEY_Q:

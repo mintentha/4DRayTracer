@@ -18,6 +18,8 @@ RTWindow::RTWindow(const char* name, int width, int height, float samplesPerPixe
 	this->ppc = ppc;
 	this->ppc->resize(fbWidth, fbHeight);
 	this->scene = scene;
+	this->mousex, this->mousey = 0;
+	this->rotIn = false;
 	textureID = 0;
 	texFBO = 0;
 	error = OK;
@@ -47,9 +49,13 @@ RTWindow::RTWindow(const char* name, int width, int height, float samplesPerPixe
 	glfwSetWindowUserPointer(window, this);
 	glfwSetKeyCallback(window, kbdCallback);
 	glfwSetCursorPosCallback(window, mouseCallback);
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	glfwSetMouseButtonCallback(window, mouseButtonCallback);
 	glfwSetScrollCallback(window, scrollCallback);
 	glfwSetFramebufferSizeCallback(window, fbSizeCallback);
+	if (glfwRawMouseMotionSupported()) {
+		glfwSetInputMode(window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
+	}
 	if (resizeMode == RATIO_LOCKED || resizeMode == SS_RATIO_LOCKED) {
 		glfwSetWindowAspectRatio(window, vpWidth, vpHeight);
 	}
@@ -73,18 +79,71 @@ void RTWindow::kbdCallback(GLFWwindow* window, int key, int scancode, int action
 
 	switch (action) {
 		case GLFW_PRESS:
-			std::cout << "Pressed: " << key << "\n";
-			rtw->ppc->press(key);
+			if (key == GLFW_KEY_LEFT_SHIFT) {
+				rtw->rotIn = true;
+			}
+			else {
+				std::cout << "Pressed: " << key << "\n";
+				rtw->ppc->press(key);
+			}
 			break;
 		case GLFW_RELEASE:
-			std::cout << "Released: " << key << "\n";
-			rtw->ppc->release(key);
+			if (key == GLFW_KEY_LEFT_SHIFT) {
+				rtw->rotIn = false;
+			}
+			else {
+				std::cout << "Released: " << key << "\n";
+				rtw->ppc->release(key);
+			}
 			break;
 	}
 }
 
 void RTWindow::mouseCallback(GLFWwindow* window, double x, double y) {
 	RTWindow* rtw = static_cast<RTWindow*>(glfwGetWindowUserPointer(window));
+
+	float sens = 0.0002;
+	float dx = (x - rtw->mousex) * sens;
+	float dy = (y - rtw->mousey) * sens;
+	rtw->mousex = x;
+	rtw->mousey = y;
+	std::cout << "Mouse moved: " << dx << ", " << dy << "\n";
+
+	V4 a = rtw->ppc->geta();
+	V4 b = rtw->ppc->getb();
+	V4 c = rtw->ppc->getc();
+	V4 vd = rtw->ppc->getVD();
+
+	M44 wtocBasis = M44();
+	wtocBasis.SetColumn(0, a);
+	wtocBasis.SetColumn(1, b);
+	wtocBasis.SetColumn(2, c);
+	wtocBasis.SetColumn(3, vd);
+	M44 ctowBasis = wtocBasis.Inverted();
+
+	a = wtocBasis * a;
+	b = wtocBasis * b;
+	c = wtocBasis * c;
+
+	M44 rotationMatrix = M44();
+	if (rtw->rotIn) {
+		rotationMatrix.SetColumn(0, V4(cos(dx), -sin(dx)*sin(dy), 0, -sin(dx)*cos(dy)));
+		rotationMatrix.SetColumn(1, V4(0, cos(dy), 0, -sin(dy)));
+		rotationMatrix.SetColumn(2, V4(0, 0, 1, 0));
+		rotationMatrix.SetColumn(3, V4(sin(dx), cos(dx)*sin(dy), 0, cos(dx)*cos(dy)));
+	}
+	else {
+		rotationMatrix.SetColumn(0, V4(cos(dx), 0, -sin(dx), 0));
+		rotationMatrix.SetColumn(1, V4(sin(dx) * sin(dy), cos(dy), cos(dx) * sin(dy), 0));
+		rotationMatrix.SetColumn(2, V4(sin(dx) * cos(dy), -sin(dy), cos(dx) * cos(dy), 0));
+		rotationMatrix.SetColumn(3, V4(0, 0, 0, 1));
+	}
+
+	a = ctowBasis * (rotationMatrix * a);
+	b = ctowBasis * (rotationMatrix * b);
+	c = ctowBasis * (rotationMatrix * c);
+
+	rtw->ppc->setPose(a, b, c);
 }
 
 void RTWindow::mouseButtonCallback(GLFWwindow* window, int button, int state, int mods) {
