@@ -14,11 +14,12 @@ private:
 	float goalNumSamples;
 	int fbWidth, fbHeight; // Dimensions of what we're actually rendering
 	int vpWidth, vpHeight; // Dimensions of what we're displaying
+	int mousex, mousey;
 	GLFWwindow* window;
 	FrameBuffer* fb;
 	GLuint textureID;
 	GLuint texFBO;
-	bool isOpen;
+	bool isOpen, rotIn;
 	// both of these are temporary, later refactor PPC to exist in 4D space. Also add rotation matrices
 	// For now this just helps with controlling the tanslation, which can be done in kbdCallback
 	// callback functions
