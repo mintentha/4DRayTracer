@@ -1,25 +1,47 @@
 #pragma once
 
-#include <glad/gl.h>
-#include <GLFW/glfw3.h>
-
 #include "FrameBuffer.h"
 #include "PPC.h"
 #include "Scene.h"
+#include "defines.h"
 
-// TODO: possible make the window resizable
+#include <glad/gl.h>
+#include <GLFW/glfw3.h>
+
+#include <thread>
+#include <mutex>
 
 class RTWindow {
 private:
 	float goalNumSamples;
-	int fbWidth, fbHeight; // Dimensions of what we're actually rendering
-	int vpWidth, vpHeight; // Dimensions of what we're displaying
+	int width, height; // Dimensions of what we're displaying
 	int mousex, mousey;
 	GLFWwindow* window;
-	FrameBuffer* fb;
+	FrameBuffer* frontfb;
+	FrameBuffer* backfb;
 	GLuint textureID;
 	GLuint texFBO;
 	bool isOpen, rotIn;
+
+	std::mutex bufferLock;
+	std::mutex sizeLock;
+	std::thread renderThread;
+
+	int backfbWidth, backfbHeight;
+	bool hasSwapped;
+	bool reallocTex;
+
+	void renderBackBuffer();
+	void swapBuffers();
+
+	std::thread cluster[NUM_THREADS];
+	std::mutex clusterLock;
+	std::condition_variable cv;
+	bool clusterIsReady;
+	size_t clusterNumCompleted;
+
+	void renderSection(size_t ind);
+
 	// both of these are temporary, later refactor PPC to exist in 4D space. Also add rotation matrices
 	// For now this just helps with controlling the tanslation, which can be done in kbdCallback
 	// callback functions
@@ -57,8 +79,8 @@ public:
 	void show();
 	void hide();
 	bool isShown();
-	void draw();
 	bool shouldClose();
+	bool draw();
 private:
 	ERROR error;
 	RESIZE_MODE resizeMode;

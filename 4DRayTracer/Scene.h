@@ -26,5 +26,6 @@ public:
 	V3 RayTrace(Shape* curShape, V4 o, V4 dir, size_t depth);
 	V3 RayTrace(V4 o, V4 dir, size_t depth);
 
+	void RenderRows(PPC* ppc, FrameBuffer* fb, size_t start, size_t end);
 	void RenderRT(PPC *ppc, FrameBuffer* fb);
 };

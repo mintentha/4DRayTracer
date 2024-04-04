@@ -80,7 +80,7 @@ V4 PPC::getRay(int u, int v) {
 }
 
 V4 PPC::getRaySubPixel(float fu, float fv) {
-	return (d + a * fu + b * fv + c * (fu + fv)/10).normalize();
+	return (d + a * fu + b * fv/* + c * (fu + fv) / 10*/).normalize();
 }
 
 V4 PPC::getPixelCenter(int u, int v) {
@@ -160,7 +160,7 @@ void PPC::release(int key) {
 }
 
 void PPC::updateC() {
-	std::cout << this->left << this->right << this->front << this->back << this->up << this->down << this->in << this->out << "\n";
+	//std::cout << this->left << this->right << this->front << this->back << this->up << this->down << this->in << this->out << "\n";
 
 	V4 mov = V4(0.0f);
 	if (this->left && !this->right) {

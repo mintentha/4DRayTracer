@@ -72,9 +72,12 @@ V3 Scene::RayTrace(V4 o, V4 dir, size_t depth) {
 	return RayTrace(nullptr, o, dir, depth);
 }
 
-void Scene::RenderRT(PPC *ppc, FrameBuffer* fb) {
-	for (size_t u = 0; u < fb->getW(); u++) {
-		for (size_t v = 0; v < fb->getH(); v++) {
+/*
+ * Renders all rows from [start, end)
+ */
+void Scene::RenderRows(PPC* ppc, FrameBuffer* fb, size_t start, size_t end) {
+	for (int v = end - 1; v >= static_cast<int>(start); v--) {
+		for (int u = fb->getW() - 1; u >= 0; u--) {
 			V3 col = RayTrace(ppc->getC(), ppc->getRay(u, v), maxDepth);
 			col.x = fminf(col.x, 1.0f);
 			col.y = fminf(col.y, 1.0f);
@@ -82,4 +85,8 @@ void Scene::RenderRT(PPC *ppc, FrameBuffer* fb) {
 			fb->SetColor(u, v, col);
 		}
 	}
+}
+
+void Scene::RenderRT(PPC *ppc, FrameBuffer* fb) {
+	RenderRows(ppc, fb, 0, fb->getH());
 }
