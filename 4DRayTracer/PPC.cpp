@@ -170,10 +170,10 @@ void PPC::updateC() {
 		mov.x += 0.5f;
 	}
 	if (this->down && !this->up) {
-		mov.y -= 0.5f;
+		mov.y += 0.5f;
 	}
 	if (this->up && !this->down) {
-		mov.y += 0.5f;
+		mov.y -= 0.5f;
 	}
 	if (this->back && !this->front) {
 		mov.z -= 0.5f;

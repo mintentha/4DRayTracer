@@ -11,8 +11,8 @@
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>
 
-#define WIDTH 200
-#define HEIGHT 140
+#define WIDTH 250
+#define HEIGHT 250
 
 void main() {
     glfwInit();
@@ -32,12 +32,15 @@ void main() {
     Tetrahedron* tet2 = new Tetrahedron(V4(25.0f, -40.0f, 50.0f, 10.0f), V4(50.0f, -20.0f, 50.0f, -1.0f), V4(20.0f, -30.0f, 40.0f, -10.0f), V4(24.0f, -40.0f, 40.0f, -10.0f));
     Tetrahedron* tet3 = new Tetrahedron(V4(-18.0f, 7.0f, 50.0f, -10.0f), V4(-18.0f, 30.0f, 50.0f, -10.0f), V4(-35.0f, 24.0f, 40.0f, 10.0f), V4(-30.0f, 14.0f, 40.0f, 10.0f));
 
+    PointLight* l1 = new PointLight(V4(100.0f, 0.0f, 0.0f, 0.0f), V3(1.0f), V3(1.0f));
+
     tet->material = &material;
     tet2->material = &material;
     tet3->material = &material;
     hs->material = &material;
     hs2->material = &material;
-    Scene* scene = new Scene(V3(0.0f), V3(0.0f), 2);
+    Scene* scene = new Scene(V3(0.0f), V3(0.0f), 4);
+    scene->AddLight(l1);
     scene->AddShape(hs);
     scene->AddShape(hs2);
     scene->AddShape(tet);
