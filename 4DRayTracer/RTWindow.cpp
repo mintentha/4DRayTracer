@@ -81,6 +81,11 @@ RTWindow::RTWindow(const char* name, int width, int height, float samplesPerPixe
 RTWindow::~RTWindow() {
 	delete frontfb;
 	delete backfb;
+	glfwSetWindowShouldClose(window, true);
+	renderThread.join();
+	for (size_t i = 0; i < NUM_THREADS; i++) {
+		cluster[i].join();
+	}
 	glfwDestroyWindow(window);
 }
 
@@ -211,7 +216,7 @@ bool RTWindow::isShown() {
  * Does the work to calculate all pixels in this section of the display
  */
 void RTWindow::renderSection(size_t ind) {
-	while (true) {
+	while (!shouldClose()) {
 		{
 			std::unique_lock<std::mutex> lock(clusterLock);
 			cv.wait(lock, [this] { return clusterIsReady; }); // Wait until signaled by primary thread
@@ -240,7 +245,7 @@ void RTWindow::renderSection(size_t ind) {
 }
 
 void RTWindow::renderBackBuffer() {
-	while (true) {
+	while (!shouldClose()) {
 		int fbWidth, fbHeight;
 		bool changeFBSize;
 		sizeLock.lock();
@@ -248,7 +253,7 @@ void RTWindow::renderBackBuffer() {
 		fbHeight = backfbHeight;
 		sizeLock.unlock();
 		changeFBSize = (backfb->getW() != fbWidth) || (backfb->getH() != fbHeight);
-
+		ppc->updateC();
 		{
 			std::unique_lock<std::mutex> lock(clusterLock);
 			clusterIsReady = true;
