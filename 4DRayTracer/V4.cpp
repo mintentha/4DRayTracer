@@ -194,7 +194,6 @@ V4 V4::normalized() {
 	return V4(*this).normalize();
 }
 
-
 float V4::l2squared() {
 	return *this * *this;
 }

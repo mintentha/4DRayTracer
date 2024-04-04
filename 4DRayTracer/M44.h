@@ -38,4 +38,16 @@ public:
 	float determinant();
 	friend std::ostream& operator<<(std::ostream& ostr, const M44& mat);
 	friend std::istream& operator>>(std::istream& istr, M44& mat);
+
+	/* Static functions */
+	static enum ROTATION {
+		PLANE_XY,
+		PLANE_XZ,
+		PLANE_YZ,
+		PLANE_XW,
+		PLANE_YW,
+		PLANE_ZW
+	};
+
+	static M44 RotationMatrix(ROTATION plane, float deg);
 };

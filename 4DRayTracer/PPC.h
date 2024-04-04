@@ -41,7 +41,13 @@ public:
 	V4 getPixelCenter(int u, int v);
 	V4 getSubPixelPoint(float fu, float fv);
 	void resize(int w, int h);
-	void press(int key);
-	void release(int key);
-	void updateC();
+
+	static enum AXIS {
+		FORWARD_BACK,
+		LEFT_RIGHT,
+		UP_DOWN,
+		ANA_KATA // Movement along 4th spatial dimension
+	};
+	void translate(AXIS axis, float amt);
+	void rotate(M44::ROTATION plane, float deg);
 };

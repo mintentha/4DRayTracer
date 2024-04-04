@@ -11,6 +11,13 @@
 #include <GLFW/glfw3.h>
 
 void main() {
+    {
+        PPC* ppc = new PPC(120, WIDTH, HEIGHT);
+        std::cout << ppc->geta() << std::endl << ppc->getb() << std::endl << ppc->getc() << std::endl << ppc->getVD() << std::endl;
+        ppc->rotate(M44::PLANE_XY, 45);
+        std::cout << ppc->geta() << std::endl << ppc->getb() << std::endl << ppc->getc() << std::endl << ppc->getVD() << std::endl;
+        return;
+    }
     glfwInit();
     // Set all the required options for GLFW
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);

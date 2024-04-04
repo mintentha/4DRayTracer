@@ -20,9 +20,6 @@ RTWindow::RTWindow(const char* name, int width, int height, float samplesPerPixe
 	this->ppc = ppc;
 	this->ppc->resize(fbWidth, fbHeight);
 	this->scene = scene;
-	this->mousex = 0;
-	this->mousey = 0;
-	this->rotIn = false;
 	textureID = 0;
 	texFBO = 0;
 	error = OK;
@@ -93,74 +90,11 @@ RTWindow::~RTWindow() {
 // We aren't necessarily using all of these callback functions, but it is nice to have them
 void RTWindow::kbdCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
 	RTWindow* rtw = static_cast<RTWindow*>(glfwGetWindowUserPointer(window));
-
-	switch (action) {
-		case GLFW_PRESS:
-			if (key == GLFW_KEY_LEFT_SHIFT) {
-				rtw->rotIn = true;
-			}
-			else {
-				//std::cout << "Pressed: " << key << "\n";
-				rtw->ppc->press(key);
-			}
-			break;
-		case GLFW_RELEASE:
-			if (key == GLFW_KEY_LEFT_SHIFT) {
-				rtw->rotIn = false;
-			}
-			else {
-				//std::cout << "Released: " << key << "\n";
-				rtw->ppc->release(key);
-			}
-			break;
-	}
 }
 
 void RTWindow::mouseCallback(GLFWwindow* window, double x, double y) {
 	RTWindow* rtw = static_cast<RTWindow*>(glfwGetWindowUserPointer(window));
 
-	float sens = 0.0002;
-	float dx = (x - rtw->mousex) * sens;
-	float dy = (y - rtw->mousey) * sens;
-	rtw->mousex = x;
-	rtw->mousey = y;
-	std::cout << "Mouse moved: " << dx << ", " << dy << "\n";
-
-	V4 a = rtw->ppc->geta();
-	V4 b = rtw->ppc->getb();
-	V4 c = rtw->ppc->getc();
-	V4 vd = rtw->ppc->getVD();
-
-	M44 wtocBasis = M44();
-	wtocBasis.SetColumn(0, a);
-	wtocBasis.SetColumn(1, b);
-	wtocBasis.SetColumn(2, c);
-	wtocBasis.SetColumn(3, vd);
-	M44 ctowBasis = wtocBasis.Inverted();
-
-	a = wtocBasis * a;
-	b = wtocBasis * b;
-	c = wtocBasis * c;
-
-	M44 rotationMatrix = M44();
-	if (rtw->rotIn) {
-		rotationMatrix.SetColumn(0, V4(cos(dx), -sin(dx)*sin(dy), 0, -sin(dx)*cos(dy)));
-		rotationMatrix.SetColumn(1, V4(0, cos(dy), 0, -sin(dy)));
-		rotationMatrix.SetColumn(2, V4(0, 0, 1, 0));
-		rotationMatrix.SetColumn(3, V4(sin(dx), cos(dx)*sin(dy), 0, cos(dx)*cos(dy)));
-	}
-	else {
-		rotationMatrix.SetColumn(0, V4(cos(dx), 0, -sin(dx), 0));
-		rotationMatrix.SetColumn(1, V4(sin(dx) * sin(dy), cos(dy), cos(dx) * sin(dy), 0));
-		rotationMatrix.SetColumn(2, V4(sin(dx) * cos(dy), -sin(dy), cos(dx) * cos(dy), 0));
-		rotationMatrix.SetColumn(3, V4(0, 0, 0, 1));
-	}
-
-	a = ctowBasis * (rotationMatrix * a);
-	b = ctowBasis * (rotationMatrix * b);
-	c = ctowBasis * (rotationMatrix * c);
-
-	rtw->ppc->setPose(a, b, c);
 }
 
 void RTWindow::mouseButtonCallback(GLFWwindow* window, int button, int state, int mods) {

@@ -37,4 +37,13 @@ public:
 	float determinant();
 	friend std::ostream& operator<<(std::ostream& ostr, const M33& mat);
 	friend std::istream& operator>>(std::istream& istr, M33& mat);
+
+	/* Static functions */
+	static enum ROTATION {
+		PLANE_XY,
+		PLANE_XZ,
+		PLANE_YZ
+	};
+
+	static M33 RotationMatrix(ROTATION plane, float deg);
 };

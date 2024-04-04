@@ -1,4 +1,7 @@
 #include "V3.h"
+
+#include "M33.h"
+
 #include <math.h>
 
 V3::V3() {
@@ -154,7 +157,6 @@ V3 &V3::normalize() {
 V3 V3::normalized() {
 	return V3(*this).normalize();
 }
-
 
 float V3::l2squared() {
 	return *this * *this;

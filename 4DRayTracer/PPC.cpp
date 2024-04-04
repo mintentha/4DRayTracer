@@ -80,7 +80,7 @@ V4 PPC::getRay(int u, int v) {
 }
 
 V4 PPC::getRaySubPixel(float fu, float fv) {
-	return (d + a * fu + b * fv/* + c * (fu + fv) / 10*/).normalize();
+	return (d + a * fu + b * fv + c * (fu + fv)/10).normalize();
 }
 
 V4 PPC::getPixelCenter(int u, int v) {
@@ -101,95 +101,31 @@ void PPC::resize(int w, int h) {
 	this->d = getVD() * getF() * sqrtf(scaleF) - a * (static_cast<float>(w) / 2) - b * (static_cast<float>(h) / 2);
 }
 
-void PPC::press(int key) {
-	switch (key) {
-		case GLFW_KEY_A:
-			this->left = true;
+void PPC::translate(PPC::AXIS axis, float amt) {
+	V4 dir;
+	switch (axis) {
+		case FORWARD_BACK:
+			dir = getVD();
 			break;
-		case GLFW_KEY_D:
-			this->right = true;
+		case LEFT_RIGHT:
+			dir = a;
 			break;
-		case GLFW_KEY_W:
-			this->front = true;
+		case UP_DOWN:
+			dir = -b;
 			break;
-		case GLFW_KEY_S:
-			this->back = true;
-			break;
-		case GLFW_KEY_SPACE:
-			this->up = true;
-			break;
-		case GLFW_KEY_LEFT_CONTROL:
-			this->down = true;
-			break;
-		case GLFW_KEY_Q:
-			this->in = true;
-			break;
-		case GLFW_KEY_E:
-			this->out = true;
+		case ANA_KATA:
+			dir = c;
 			break;
 	}
+	C += dir * amt;
 }
 
-void PPC::release(int key) {
-	switch (key) {
-		case GLFW_KEY_A:
-			this->left = false;
-			break;
-		case GLFW_KEY_D:
-			this->right = false;
-			break;
-		case GLFW_KEY_W:
-			this->front = false;
-			break;
-		case GLFW_KEY_S:
-			this->back = false;
-			break;
-		case GLFW_KEY_SPACE:
-			this->up = false;
-			break;
-		case GLFW_KEY_LEFT_CONTROL:
-			this->down = false;
-			break;
-		case GLFW_KEY_Q:
-			this->in = false;
-			break;
-		case GLFW_KEY_E:
-			this->out = false;
-			break;
-	}
-}
-
-void PPC::updateC() {
-	//std::cout << this->left << this->right << this->front << this->back << this->up << this->down << this->in << this->out << "\n";
-
-	V4 mov = V4(0.0f);
-	if (this->left && !this->right) {
-		mov.x -= 0.5f;
-	}
-	if (this->right && !this->left) {
-		mov.x += 0.5f;
-	}
-	if (this->down && !this->up) {
-		mov.y += 0.5f;
-	}
-	if (this->up && !this->down) {
-		mov.y -= 0.5f;
-	}
-	if (this->back && !this->front) {
-		mov.z -= 0.5f;
-	}
-	if (this->front && !this->back) {
-		mov.z += 0.5f;
-	}
-	if (this->out && !this->in) {
-		mov.w -= 0.5f;
-	}
-	if (this->in && !this->out) {
-		mov.w += 0.5f;
-	}
-
-	this->C += mov.z * getVD();
-	this->C += mov.x * a;
-	this->C += mov.y * b;
-	this->C += mov.w * c;
+void PPC::rotate(M44::ROTATION plane, float deg) {
+	M44 basis(a, -b, getVD(), c);
+	M44 basisT = basis.Transposed(); // transpose is same as inverse
+	M44 rot = basisT * M44::RotationMatrix(plane, deg) * basis;
+	a = rot * a;
+	b = rot * b;
+	c = rot * c;
+	d = rot * d;
 }
