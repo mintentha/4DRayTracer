@@ -188,5 +188,8 @@ void PPC::updateC() {
 		mov.w += 0.5f;
 	}
 
-	this->C += mov;
+	this->C += mov.z * getVD();
+	this->C += mov.x * a;
+	this->C += mov.y * b;
+	this->C += mov.w * c;
 }
