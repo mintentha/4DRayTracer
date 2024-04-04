@@ -6,10 +6,12 @@
 #include "V3.h"
 #include "V4.h"
 
-Scene::Scene(V3 bgrCol, size_t maxDepth, std::vector<Shape*>* shapes) {
+Scene::Scene(V3 ambientCol, V3 bgrCol, size_t maxDepth, std::vector<Shape*>* shapes, std::vector<PointLight*>* lights) {
+	this->ambientCol = ambientCol;
 	this->bgrCol = bgrCol;
 	this->maxDepth = maxDepth;
 	this->shapes = shapes;
+	this->lights = lights;
 }
 
 Scene::~Scene() {
@@ -17,12 +19,21 @@ Scene::~Scene() {
 		delete shapes->back();
 		shapes->pop_back();
 	}
+	while (lights->size() > 0) {
+		delete lights->back();
+		lights->pop_back();
+	}
 	delete shapes;
+	delete lights;
 }
 
 
 void Scene::AddShape(Shape* shape) {
 	shapes->push_back(shape);
+}
+
+void Scene::AddLight(PointLight* light) {
+	lights->push_back(light);
 }
 
 V4 Scene::intersect(Shape* curShape, V4 o, V4 dir, Shape** shape, float* time) {
@@ -47,9 +58,36 @@ V4 Scene::intersect(Shape* curShape, V4 o, V4 dir, Shape** shape, float* time) {
 	return closestP;
 }
 
+V3 Scene::phong(Shape* shape, V4 p, V4 dir, PointLight* light) {
+	V4 L = light->pos - p;
+	L.normalize();
+	V4 N = shape->getNormal(p);
+	N.normalize();
+	V3 dif = (light->diffuse % shape->material->diffuse) * fmaxf(L * N, 0.0f);
+	V4 R = reflect(L, N);
+	R.normalize();
+	V4 V = -dir;
+	V.normalize();
+	V3 spec = (light->specular % shape->material->specular) * powf(fmaxf(R * V, 0.0f), shape->material->shininess);
+	return dif + spec;
+}
+
+bool Scene::isLightVisible(V4 p, Shape* shape, PointLight* light) {
+	V4 o = light->pos;
+	V4 dir = p - o;
+	dir.normalize();
+	Shape* firstShape = nullptr;
+	float time = 0.0f;
+	intersect(o, dir, &firstShape, &time);
+	return (time >= 0) && (firstShape == shape);
+}
 
 V4 Scene::intersect(V4 o, V4 dir, Shape** shape, float* time) {
 	return intersect(nullptr, o, dir, shape, time);
+}
+
+V4 Scene::reflect(V4 V, V4 N) {
+	return (2 * (V * N) * N - V).normalized();
 }
 
 V3 Scene::RayTrace(Shape* curShape, V4 o, V4 dir, size_t depth) {
@@ -60,8 +98,30 @@ V3 Scene::RayTrace(Shape* curShape, V4 o, V4 dir, size_t depth) {
 	if (time < 0 || shape == nullptr) {
 		return bgrCol;
 	}
+
+	for (size_t i = 0; i < lights->size(); i++) {
+		if (isLightVisible(p, shape, lights->at(i))) {
+			col += phong(shape, p, dir, lights->at(i));
+			if (col == 0.0f) {
+				phong(shape, p, dir, lights->at(i));
+			}
+		}
+	}
+
+	col += ambientCol;
+	if (depth == 0 || shape->material->reflectivity <= 0.0f) {
+		return col;
+	}
+
+	V4 reflected = reflect(-dir, shape->getNormal(p));
+
+	//col += shape->material->reflectivity * RayTrace(shape, p, reflected, depth - 1);
+	//return col;
+
+
 	// TODO: Lighting
 	// For now, just return the material diffuse color
+	// 
 	if (shape->material) {
 		return shape->material->diffuse;
 	}

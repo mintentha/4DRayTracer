@@ -37,7 +37,7 @@ void main() {
     tet3->material = &material;
     hs->material = &material;
     hs2->material = &material;
-    Scene* scene = new Scene(V3(0.0f), 2);
+    Scene* scene = new Scene(V3(0.0f), V3(0.0f), 2);
     scene->AddShape(hs);
     scene->AddShape(hs2);
     scene->AddShape(tet);
