@@ -3,16 +3,12 @@
 #include "RTWindow.h"
 #include "Tetrahedron.h"
 #include "HyperSphere.h"
-
-#include "PPC.h"
+#include "defines.h"
 
 #include <iostream>
 
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>
-
-#define WIDTH 250
-#define HEIGHT 250
 
 void main() {
     glfwInit();
@@ -66,24 +62,12 @@ void main() {
             return;
     }
 
-    // We are actually fully capable of running multiple instances
-    // of our raytracer simultaneously bc of how we abstracted it
-    // and they keyboard controls are separate for each of them
-    /*
-    PPC* ppc2 = new PPC(120, WIDTH, HEIGHT);
-    ppc2->SetPose(V3(0.0f), V3(0.0f, 0.0f, 50.0f), V3(0.0f, 1.0f, 0.0f));
-    RTWindow* window2 = new RTWindow(WIDTH, HEIGHT, ppc2, scene);
-    */
-
     int i = 0;
     while (!window->shouldClose()) {
-        window->ppc->updateC();
-        window->draw();
-
-        //window2->draw();
-        
-        // Writing to console is actually slow but it is helpful to know whats going on
-        std::cout << "\rFrame " << ++i << "\n" << std::flush;
+        if (window->draw()) {
+            // Writing to console is actually slow but it is helpful to know whats going on
+            std::cout << "Frame " << ++i << std::endl;
+        }
     }
     glfwTerminate();
 }
