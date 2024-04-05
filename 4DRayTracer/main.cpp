@@ -11,13 +11,6 @@
 #include <GLFW/glfw3.h>
 
 void main() {
-    {
-        PPC* ppc = new PPC(120, WIDTH, HEIGHT);
-        std::cout << ppc->geta() << std::endl << ppc->getb() << std::endl << ppc->getc() << std::endl << ppc->getVD() << std::endl;
-        ppc->rotate(M44::PLANE_XY, 45);
-        std::cout << ppc->geta() << std::endl << ppc->getb() << std::endl << ppc->getc() << std::endl << ppc->getVD() << std::endl;
-        return;
-    }
     glfwInit();
     // Set all the required options for GLFW
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
@@ -51,7 +44,7 @@ void main() {
     scene->AddShape(tet2);
     scene->AddShape(tet3);
     // cmdLineTest();
-    RTWindow* window = new RTWindow(WIDTH, HEIGHT, 1, RTWindow::TRUE, ppc, scene);
+    RTWindow* window = new RTWindow(WIDTH, HEIGHT, 4, RTWindow::TRUE, ppc, scene);
     RTWindow::ERROR error = window->hasError();
     switch (error) {
         case RTWindow::CREATE_WINDOW:
@@ -74,7 +67,7 @@ void main() {
     while (!window->shouldClose()) {
         if (window->draw()) {
             // Writing to console is actually slow but it is helpful to know whats going on
-            std::cout << "Frame " << ++i << std::endl;
+            //std::cout << "Frame " << ++i << std::endl;
         }
     }
     glfwTerminate();

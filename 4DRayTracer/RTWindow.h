@@ -15,13 +15,25 @@ class RTWindow {
 private:
 	float goalNumSamples;
 	int width, height; // Dimensions of what we're displaying
-	int mousex, mousey;
 	GLFWwindow* window;
 	FrameBuffer* frontfb;
 	FrameBuffer* backfb;
 	GLuint textureID;
 	GLuint texFBO;
-	bool isOpen, rotIn;
+	bool isOpen;
+
+	static enum POSNEG {
+		POS,
+		NEG,
+		POSNEGSIZE
+	};
+	bool isPressedDir[AXES_PLANES::AXIS_SIZE][POSNEGSIZE];
+	bool isPressedRot[AXES_PLANES::AXIS_SIZE][POSNEGSIZE];
+	double timePressedDir[AXES_PLANES::AXIS_SIZE][POSNEGSIZE];
+	double timePressedRot[AXES_PLANES::PLANE_SIZE][POSNEGSIZE];
+	float deltadir[AXES_PLANES::AXIS_SIZE];		// Changes in translation since last frame
+	float deltatheta[AXES_PLANES::PLANE_SIZE];	// Changes in rotation since last frame
+	std::mutex buttonLock;
 
 	std::mutex bufferLock;
 	std::mutex sizeLock;

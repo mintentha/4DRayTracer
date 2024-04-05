@@ -1,7 +1,6 @@
 #include "PPC.h"
 #include "V4.h"
 #include "M44.h"
-#include <GLFW/glfw3.h>
 
 PPC::PPC(float hfov, int w, int h) {
 	this->w = w;
@@ -80,7 +79,7 @@ V4 PPC::getRay(int u, int v) {
 }
 
 V4 PPC::getRaySubPixel(float fu, float fv) {
-	return (d + a * fu + b * fv + c * (fu + fv)/10).normalize();
+	return (d + a * fu + b * fv/* + c * (fu + fv) / 10*/).normalize();
 }
 
 V4 PPC::getPixelCenter(int u, int v) {
@@ -101,26 +100,27 @@ void PPC::resize(int w, int h) {
 	this->d = getVD() * getF() * sqrtf(scaleF) - a * (static_cast<float>(w) / 2) - b * (static_cast<float>(h) / 2);
 }
 
-void PPC::translate(PPC::AXIS axis, float amt) {
+void PPC::translate(AXES_PLANES::AXIS axis, float amt) {
 	V4 dir;
+	using namespace AXES_PLANES;
 	switch (axis) {
-		case FORWARD_BACK:
+		case AXIS_Z:
 			dir = getVD();
 			break;
-		case LEFT_RIGHT:
+		case AXIS_X:
 			dir = a;
 			break;
-		case UP_DOWN:
+		case AXIS_Y:
 			dir = -b;
 			break;
-		case ANA_KATA:
+		case AXIS_W:
 			dir = c;
 			break;
 	}
 	C += dir * amt;
 }
 
-void PPC::rotate(M44::ROTATION plane, float deg) {
+void PPC::rotate(AXES_PLANES::PLANE plane, float deg) {
 	M44 basis(a, -b, getVD(), c);
 	M44 basisT = basis.Transposed(); // transpose is same as inverse
 	M44 rot = basisT * M44::RotationMatrix(plane, deg) * basis;

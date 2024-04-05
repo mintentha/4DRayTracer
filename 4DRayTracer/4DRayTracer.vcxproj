@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="axis_planes.h" />
     <ClInclude Include="defines.h" />
     <ClInclude Include="PPC.h" />
     <ClInclude Include="RTWindow.h" />

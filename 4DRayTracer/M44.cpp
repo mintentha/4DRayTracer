@@ -209,46 +209,47 @@ std::istream& operator>>(std::istream& istr, M44& mat) {
 	Generates a rotation matrix with the specified degrees
 	The specified rotation plane is the plane along which points *are* rotated
  */
-M44 M44::RotationMatrix(ROTATION plane, float deg) {
+M44 M44::RotationMatrix(AXES_PLANES::PLANE plane, float deg) {
 	float rad = deg * M_PI / 180.0f;
 	M44 ret;
+	using namespace AXES_PLANES;
 	switch (plane) {
-	case PLANE_XY:
-		ret[0] = V4(cosf(rad), -sinf(rad), 0.0f, 0.0f);
-		ret[1] = V4(sinf(rad), cosf(rad), 0.0f, 0.0f);
-		ret[2] = V4(0.0f, 0.0f, 1.0f, 0.0f);
-		ret[3] = V4(0.0f, 0.0f, 0.0f, 1.0f);
-		break;
-	case PLANE_XZ:
-		ret[0] = V4(cosf(rad), 0.0f, sinf(rad), 0.0f);
-		ret[1] = V4(0.0f, 1.0f, 0.0f, 0.0f);
-		ret[2] = V4(-sinf(rad), 0.0f, cosf(rad), 0.0f);
-		ret[3] = V4(0.0f, 0.0f, 0.0f, 1.0f);
-		break;
-	case PLANE_YZ:
-		ret[0] = V4(1.0f, 0.0f, 0.0f, 0.0f);
-		ret[1] = V4(0.0f, cosf(rad), -sinf(rad), 0.0f);
-		ret[2] = V4(0.0f, sinf(rad), cosf(rad), 0.0f);
-		ret[3] = V4(0.0f, 0.0f, 0.0f, 1.0f);
-		break;
-	case PLANE_XW:
-		ret[0] = V4(cosf(rad), 0.0f, 0.0f, -sinf(rad));
-		ret[1] = V4(0.0f, 1.0f, 0.0f, 0.0f);
-		ret[2] = V4(0.0f, 0.0f, 1.0f, 0.0f);
-		ret[3] = V4(sinf(rad), 0.0f, 0.0f, cosf(rad));
-		break;
-	case PLANE_YW:
-		ret[0] = V4(1.0f, 0.0f, 0.0f, 0.0f);
-		ret[1] = V4(0.0f, cosf(rad), 0.0f, sinf(rad));
-		ret[2] = V4(0.0f, 0.0f, 1.0f, 0.0f);
-		ret[3] = V4(0.0f, -sinf(rad), 0.0f, cosf(rad));
-		break;
-	case PLANE_ZW:
-		ret[0] = V4(1.0f, 0.0f, 0.0f, 0.0f);
-		ret[1] = V4(0.0f, 1.0f, 0.0f, 0.0f);
-		ret[2] = V4(0.0f, 0.0f, cosf(rad), sinf(rad));
-		ret[3] = V4(0.0f, 0.0f, -sinf(rad), cosf(rad));
-		break;
+		case PLANE_XY:
+			ret[0] = V4(cosf(rad), -sinf(rad), 0.0f, 0.0f);
+			ret[1] = V4(sinf(rad), cosf(rad), 0.0f, 0.0f);
+			ret[2] = V4(0.0f, 0.0f, 1.0f, 0.0f);
+			ret[3] = V4(0.0f, 0.0f, 0.0f, 1.0f);
+			break;
+		case PLANE_XZ:
+			ret[0] = V4(cosf(rad), 0.0f, sinf(rad), 0.0f);
+			ret[1] = V4(0.0f, 1.0f, 0.0f, 0.0f);
+			ret[2] = V4(-sinf(rad), 0.0f, cosf(rad), 0.0f);
+			ret[3] = V4(0.0f, 0.0f, 0.0f, 1.0f);
+			break;
+		case PLANE_YZ:
+			ret[0] = V4(1.0f, 0.0f, 0.0f, 0.0f);
+			ret[1] = V4(0.0f, cosf(rad), -sinf(rad), 0.0f);
+			ret[2] = V4(0.0f, sinf(rad), cosf(rad), 0.0f);
+			ret[3] = V4(0.0f, 0.0f, 0.0f, 1.0f);
+			break;
+		case PLANE_XW:
+			ret[0] = V4(cosf(rad), 0.0f, 0.0f, -sinf(rad));
+			ret[1] = V4(0.0f, 1.0f, 0.0f, 0.0f);
+			ret[2] = V4(0.0f, 0.0f, 1.0f, 0.0f);
+			ret[3] = V4(sinf(rad), 0.0f, 0.0f, cosf(rad));
+			break;
+		case PLANE_YW:
+			ret[0] = V4(1.0f, 0.0f, 0.0f, 0.0f);
+			ret[1] = V4(0.0f, cosf(rad), 0.0f, sinf(rad));
+			ret[2] = V4(0.0f, 0.0f, 1.0f, 0.0f);
+			ret[3] = V4(0.0f, -sinf(rad), 0.0f, cosf(rad));
+			break;
+		case PLANE_ZW:
+			ret[0] = V4(1.0f, 0.0f, 0.0f, 0.0f);
+			ret[1] = V4(0.0f, 1.0f, 0.0f, 0.0f);
+			ret[2] = V4(0.0f, 0.0f, cosf(rad), sinf(rad));
+			ret[3] = V4(0.0f, 0.0f, -sinf(rad), cosf(rad));
+			break;
 	}
 	return ret;
 }

@@ -2,6 +2,7 @@
 
 #include "V4.h"
 #include "M44.h"
+#include "axis_planes.h"
 
 class PPC {
 private:
@@ -42,12 +43,6 @@ public:
 	V4 getSubPixelPoint(float fu, float fv);
 	void resize(int w, int h);
 
-	static enum AXIS {
-		FORWARD_BACK,
-		LEFT_RIGHT,
-		UP_DOWN,
-		ANA_KATA // Movement along 4th spatial dimension
-	};
-	void translate(AXIS axis, float amt);
-	void rotate(M44::ROTATION plane, float deg);
+	void translate(AXES_PLANES::AXIS axis, float amt);
+	void rotate(AXES_PLANES::PLANE plane, float deg);
 };

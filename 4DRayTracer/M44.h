@@ -3,6 +3,8 @@
 #include "V4.h"
 #include "M33.h"
 
+#include "axis_planes.h"
+
 #include <iostream>
 
 class M44 {
@@ -39,15 +41,5 @@ public:
 	friend std::ostream& operator<<(std::ostream& ostr, const M44& mat);
 	friend std::istream& operator>>(std::istream& istr, M44& mat);
 
-	/* Static functions */
-	static enum ROTATION {
-		PLANE_XY,
-		PLANE_XZ,
-		PLANE_YZ,
-		PLANE_XW,
-		PLANE_YW,
-		PLANE_ZW
-	};
-
-	static M44 RotationMatrix(ROTATION plane, float deg);
+	static M44 RotationMatrix(AXES_PLANES::PLANE plane, float deg);
 };

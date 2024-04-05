@@ -53,7 +53,7 @@ RTWindow::RTWindow(const char* name, int width, int height, float samplesPerPixe
 	// trying that next
 	glfwSetWindowUserPointer(window, this);
 	glfwSetKeyCallback(window, kbdCallback);
-	//glfwSetCursorPosCallback(window, mouseCallback);
+	glfwSetCursorPosCallback(window, mouseCallback);
 	//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	glfwSetMouseButtonCallback(window, mouseButtonCallback);
 	glfwSetScrollCallback(window, scrollCallback);
@@ -90,6 +90,64 @@ RTWindow::~RTWindow() {
 // We aren't necessarily using all of these callback functions, but it is nice to have them
 void RTWindow::kbdCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
 	RTWindow* rtw = static_cast<RTWindow*>(glfwGetWindowUserPointer(window));
+	double time = glfwGetTime();
+	using namespace AXES_PLANES;
+	AXIS axis = AXIS_X;
+	POSNEG pn = POS;
+	switch (key) {
+		case GLFW_KEY_A:
+			axis = AXIS_X;
+			pn = NEG;
+			break;
+		case GLFW_KEY_D:
+			axis = AXIS_X;
+			pn = POS;
+			break;
+		case GLFW_KEY_W:
+			axis = AXIS_Z;
+			pn = POS;
+			break;
+		case GLFW_KEY_S:
+			axis = AXIS_Z;
+			pn = NEG;
+			break;
+		case GLFW_KEY_SPACE:
+			axis = AXIS_Y;
+			pn = POS;
+			break;
+		case GLFW_KEY_LEFT_CONTROL:
+			axis = AXIS_Y;
+			pn = NEG;
+			break;
+		case GLFW_KEY_Q:
+			axis = AXIS_W;
+			pn = POS;
+			break;
+		case GLFW_KEY_E:
+			axis = AXIS_W;
+			pn = NEG;
+			break;
+		default:
+			return;
+	}
+	switch (action) {
+		case GLFW_PRESS:
+			rtw->buttonLock.lock();
+			rtw->timePressedDir[axis][pn] = time;
+			rtw->isPressedDir[axis][pn] = true;
+			rtw->buttonLock.unlock();
+			break;
+		case GLFW_RELEASE:
+			rtw->buttonLock.lock();
+			float deltaTime = time - rtw->timePressedDir[axis][pn];
+			if (pn == NEG) {
+				deltaTime *= -1.0f;
+			}
+			rtw->deltadir[axis] += deltaTime * TRANSLATION_SPEED;
+			rtw->isPressedDir[axis][pn] = false;
+			rtw->buttonLock.unlock();
+			break;
+	}
 }
 
 void RTWindow::mouseCallback(GLFWwindow* window, double x, double y) {
@@ -187,14 +245,32 @@ void RTWindow::renderBackBuffer() {
 		fbHeight = backfbHeight;
 		sizeLock.unlock();
 		changeFBSize = (backfb->getW() != fbWidth) || (backfb->getH() != fbHeight);
-		ppc->updateC();
+		if (changeFBSize) {
+			ppc->resize(fbWidth, fbHeight);
+			backfb->resize(fbWidth, fbHeight);
+		}
+		buttonLock.lock();
+		double time = glfwGetTime();	// Is this safe to run on a separate thread?
+		for (size_t axis = 0; axis < AXES_PLANES::AXIS_SIZE; axis++) {
+			if (isPressedDir[axis][POS]) {
+				float deltaTime = time - timePressedDir[axis][POS];
+				timePressedDir[axis][POS] = time;
+				deltadir[axis] += deltaTime * TRANSLATION_SPEED;
+			}
+			if (isPressedDir[axis][NEG]) {
+				float deltaTime = time - timePressedDir[axis][NEG];
+				timePressedDir[axis][NEG] = time;
+				deltadir[axis] -= deltaTime * TRANSLATION_SPEED;
+			}
+			if (deltadir[axis] != 0.0f) {
+				ppc->translate(static_cast<AXES_PLANES::AXIS>(axis), deltadir[axis]);
+				deltadir[axis] = 0.0f;
+			}
+		}
+		buttonLock.unlock();
 		{
 			std::unique_lock<std::mutex> lock(clusterLock);
 			clusterIsReady = true;
-			if (changeFBSize) {
-				ppc->resize(fbWidth, fbHeight);
-				backfb->resize(fbWidth, fbHeight);
-			}
 			cv.notify_all();
 		}
 		//scene->RenderRT(ppc, backfb);
@@ -227,7 +303,6 @@ void RTWindow::swapBuffers() {
  * Returns true if a new frame was rendered.
  */
 bool RTWindow::draw() {
-	//ppc->updateC();
 	int fbWidth, fbHeight;
 	bool shouldUpdate;
 	bufferLock.lock();
