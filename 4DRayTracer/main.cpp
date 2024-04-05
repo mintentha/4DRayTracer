@@ -44,7 +44,7 @@ void main() {
     scene->AddShape(tet2);
     scene->AddShape(tet3);
     // cmdLineTest();
-    RTWindow* window = new RTWindow(WIDTH, HEIGHT, 4, RTWindow::TRUE, ppc, scene);
+    RTWindow* window = new RTWindow(WIDTH, HEIGHT, 4, RTWindow::RATIO_LOCKED, ppc, scene);
     RTWindow::ERROR error = window->hasError();
     switch (error) {
         case RTWindow::CREATE_WINDOW:

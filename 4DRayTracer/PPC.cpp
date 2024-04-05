@@ -79,6 +79,8 @@ V4 PPC::getRay(int u, int v) {
 }
 
 V4 PPC::getRaySubPixel(float fu, float fv) {
+	// Commented out the change along c to have a better understanding of whats going on with the rotations
+	// it might be best to just have another parameter of these functions for the c offset, and determine the offset in RTWindow.cpp
 	return (d + a * fu + b * fv/* + c * (fu + fv) / 10*/).normalize();
 }
 
@@ -121,8 +123,8 @@ void PPC::translate(AXES_PLANES::AXIS axis, float amt) {
 }
 
 void PPC::rotate(AXES_PLANES::PLANE plane, float deg) {
-	M44 basis(a, -b, getVD(), c);
-	M44 basisT = basis.Transposed(); // transpose is same as inverse
+	M44 basisT(a, -b, getVD(), c);
+	M44 basis = basisT.Transposed(); // transpose is same as inverse
 	M44 rot = basisT * M44::RotationMatrix(plane, deg) * basis;
 	a = rot * a;
 	b = rot * b;

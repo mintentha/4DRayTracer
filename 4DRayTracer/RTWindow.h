@@ -25,15 +25,22 @@ private:
 	static enum POSNEG {
 		POS,
 		NEG,
-		POSNEGSIZE
+		POSNEG_SIZE
 	};
-	bool isPressedDir[AXES_PLANES::AXIS_SIZE][POSNEGSIZE];
-	bool isPressedRot[AXES_PLANES::AXIS_SIZE][POSNEGSIZE];
-	double timePressedDir[AXES_PLANES::AXIS_SIZE][POSNEGSIZE];
-	double timePressedRot[AXES_PLANES::PLANE_SIZE][POSNEGSIZE];
-	float deltadir[AXES_PLANES::AXIS_SIZE];		// Changes in translation since last frame
-	float deltatheta[AXES_PLANES::PLANE_SIZE];	// Changes in rotation since last frame
+	bool isPressedDir[AXES_PLANES::AXIS_SIZE][POSNEG_SIZE];
+	double timePressedDir[AXES_PLANES::AXIS_SIZE][POSNEG_SIZE];
 	std::mutex buttonLock;
+	float deltadir[AXES_PLANES::AXIS_SIZE];		// Changes in translation since last frame
+
+	float mouseX;
+	float mouseY;
+	// Normally, moving mouse left/right will turn in XZ plane, moving mouse up/down will turn in YZ plane
+	// When you press shift, moving mouse left/right will turn in XY plane, moving mouse up/down will turn in ZW plane
+	// When you press alt, moving mouse left/right will turn in XW plane, moving mouse up/down will turn in YW plane
+	bool isPressedRot[2];
+	float deltatheta[AXES_PLANES::PLANE_SIZE];	// Changes in rotation since last frame
+
+	void updateRot(float mouseX, float mouseY);
 
 	std::mutex bufferLock;
 	std::mutex sizeLock;

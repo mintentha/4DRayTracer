@@ -30,6 +30,20 @@ RTWindow::RTWindow(const char* name, int width, int height, float samplesPerPixe
 	clusterNumCompleted = 0;
 	frontfb = new FrameBuffer(fbWidth, fbHeight);
 	backfb = new FrameBuffer(fbWidth, fbHeight);
+	for (size_t i = 0; i < AXES_PLANES::AXIS_SIZE; i++) {
+		deltadir[i] = 0.0f;
+		for (size_t j = 0; j < POSNEG_SIZE; j++) {
+			isPressedDir[i][j] = false;
+			timePressedDir[i][j] = 0.0f;
+		}
+	}
+	isPressedRot[0] = false;
+	isPressedRot[1] = false;
+	mouseX = 0.0f;
+	mouseY = 0.0f;
+	for (size_t i = 0; i < AXES_PLANES::PLANE_SIZE; i++) {
+		deltatheta[i] = 0.0f;
+	}
 	if (resizeMode == OFF) {
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 	}
@@ -127,6 +141,55 @@ void RTWindow::kbdCallback(GLFWwindow* window, int key, int scancode, int action
 			axis = AXIS_W;
 			pn = NEG;
 			break;
+		case GLFW_KEY_LEFT_SHIFT:
+			switch (action) {
+				case GLFW_PRESS:
+					rtw->buttonLock.lock();
+					if (glfwGetInputMode(window, GLFW_CURSOR) == GLFW_CURSOR_DISABLED) {
+						double mouseX, mouseY;
+						glfwGetCursorPos(window, &mouseX, &mouseY);
+						rtw->updateRot(static_cast<float>(mouseX), static_cast<float>(mouseY));
+					}
+					rtw->isPressedRot[0] = true;
+					rtw->buttonLock.unlock();
+					return;
+				case GLFW_RELEASE:
+					rtw->buttonLock.lock();
+					if (glfwGetInputMode(window, GLFW_CURSOR) == GLFW_CURSOR_DISABLED) {
+						double mouseX, mouseY;
+						glfwGetCursorPos(window, &mouseX, &mouseY);
+						rtw->updateRot(static_cast<float>(mouseX), static_cast<float>(mouseY));
+					}
+					rtw->isPressedRot[1] = false;
+					rtw->buttonLock.unlock();
+					return;
+
+			}
+			break;
+		case GLFW_KEY_LEFT_ALT:
+			switch (action) {
+				case GLFW_PRESS:
+					rtw->buttonLock.lock();
+					if (glfwGetInputMode(window, GLFW_CURSOR) == GLFW_CURSOR_DISABLED) {
+						double mouseX, mouseY;
+						glfwGetCursorPos(window, &mouseX, &mouseY);
+						rtw->updateRot(static_cast<float>(mouseX), static_cast<float>(mouseY));
+					}
+					rtw->isPressedRot[1] = true;
+					rtw->buttonLock.unlock();
+					return;
+				case GLFW_RELEASE:
+					rtw->buttonLock.lock();
+					if (glfwGetInputMode(window, GLFW_CURSOR) == GLFW_CURSOR_DISABLED) {
+						double mouseX, mouseY;
+						glfwGetCursorPos(window, &mouseX, &mouseY);
+						rtw->updateRot(static_cast<float>(mouseX), static_cast<float>(mouseY));
+					}
+					rtw->isPressedRot[1] = false;
+					rtw->buttonLock.unlock();
+					return;
+			}
+			break;
 		default:
 			return;
 	}
@@ -152,11 +215,34 @@ void RTWindow::kbdCallback(GLFWwindow* window, int key, int scancode, int action
 
 void RTWindow::mouseCallback(GLFWwindow* window, double x, double y) {
 	RTWindow* rtw = static_cast<RTWindow*>(glfwGetWindowUserPointer(window));
-
+	if (glfwGetInputMode(window, GLFW_CURSOR) != GLFW_CURSOR_DISABLED) {
+		// Only do anything while they're holding m1 within the window
+		return;
+	}
 }
 
-void RTWindow::mouseButtonCallback(GLFWwindow* window, int button, int state, int mods) {
+void RTWindow::mouseButtonCallback(GLFWwindow* window, int button, int action, int mods) {
 	RTWindow* rtw = static_cast<RTWindow*>(glfwGetWindowUserPointer(window));
+	double mouseX, mouseY;
+	if (button == GLFW_MOUSE_BUTTON_LEFT) {
+		switch (action) {
+			case GLFW_PRESS:
+				glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+				glfwGetCursorPos(window, &mouseX, &mouseY);
+				rtw->buttonLock.lock();
+				rtw->mouseX = static_cast<float>(mouseX);
+				rtw->mouseY = static_cast<float>(mouseY);
+				rtw->buttonLock.unlock();
+				break;
+			case GLFW_RELEASE:
+				glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+				glfwGetCursorPos(window, &mouseX, &mouseY);
+				rtw->buttonLock.lock();
+				rtw->updateRot(mouseX, mouseY);
+				rtw->buttonLock.unlock();
+				break;
+		}
+	}
 }
 
 void RTWindow::scrollCallback(GLFWwindow* window, double xoffset, double yoffset) {
@@ -202,6 +288,34 @@ void RTWindow::hide() {
 
 bool RTWindow::isShown() {
 	return isOpen;
+}
+
+void RTWindow::updateRot(float mouseX, float mouseY) {
+	using namespace AXES_PLANES;
+	float diffX = this->mouseX - static_cast<float>(mouseX);
+	float diffY = this->mouseY - static_cast<float>(mouseY);
+	this->mouseX = mouseX;
+	this->mouseY = mouseY;
+	bool shiftPressed = isPressedRot[0];
+	bool altPressed = isPressedRot[1];
+	if (shiftPressed && altPressed) {
+		diffX = sqrtf(diffX);
+		diffY = sqrtf(diffY);
+	}
+	if (shiftPressed) {
+		deltatheta[PLANE_XY] -= ROTATION_SPEED * diffX;
+		deltatheta[PLANE_ZW] -= ROTATION_SPEED * diffY;
+	}
+	if (altPressed) {
+		deltatheta[PLANE_XW] -= ROTATION_SPEED * diffX;
+		deltatheta[PLANE_YW] -= ROTATION_SPEED * diffY;
+	}
+	if (!shiftPressed && !altPressed) {
+		// Positive diffX means go clockwise, which is negative
+		deltatheta[PLANE_XZ] -= ROTATION_SPEED * diffX;
+		// Positive diffY means it went down, so go clockwise, which is negative
+		deltatheta[PLANE_YZ] -= ROTATION_SPEED * diffY;
+	}
 }
 
 /*
@@ -265,6 +379,15 @@ void RTWindow::renderBackBuffer() {
 			if (deltadir[axis] != 0.0f) {
 				ppc->translate(static_cast<AXES_PLANES::AXIS>(axis), deltadir[axis]);
 				deltadir[axis] = 0.0f;
+			}
+		}
+		if (glfwGetInputMode(window, GLFW_CURSOR) == GLFW_CURSOR_DISABLED) { // is this thread safe?
+			double mouseX, mouseY;
+			glfwGetCursorPos(window, &mouseX, &mouseY); // is this thread safe?
+			updateRot(static_cast<float>(mouseX), static_cast<float>(mouseY));
+			for (size_t i = 0; i < AXES_PLANES::PLANE_SIZE; i++) {
+				ppc->rotate(static_cast<AXES_PLANES::PLANE>(i), deltatheta[i]);
+				deltatheta[i] = 0.0f;
 			}
 		}
 		buttonLock.unlock();
