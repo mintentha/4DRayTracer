@@ -115,8 +115,8 @@ V3 Scene::RayTrace(Shape* curShape, V4 o, V4 dir, size_t depth) {
 
 	V4 reflected = reflect(-dir, shape->getNormal(p));
 
-	//col += shape->material->reflectivity * RayTrace(shape, p, reflected, depth - 1);
-	//return col;
+	col += shape->material->reflectivity * RayTrace(shape, p, reflected, depth - 1);
+	return col;
 
 
 	// TODO: Lighting

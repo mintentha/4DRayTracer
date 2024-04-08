@@ -160,7 +160,7 @@ void PPC::release(int key) {
 }
 
 void PPC::updateC() {
-	std::cout << this->left << this->right << this->front << this->back << this->up << this->down << this->in << this->out << "\n";
+	//std::cout << this->left << this->right << this->front << this->back << this->up << this->down << this->in << this->out << "\n";
 
 	V4 mov = V4(0.0f);
 	if (this->left && !this->right) {
@@ -192,4 +192,5 @@ void PPC::updateC() {
 	this->C += mov.x * a;
 	this->C += mov.y * b;
 	this->C += mov.w * c;
+
 }

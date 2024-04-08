@@ -83,7 +83,7 @@ void RTWindow::kbdCallback(GLFWwindow* window, int key, int scancode, int action
 				rtw->rotIn = true;
 			}
 			else {
-				std::cout << "Pressed: " << key << "\n";
+				//std::cout << "Pressed: " << key << "\n";
 				rtw->ppc->press(key);
 			}
 			break;
@@ -92,7 +92,7 @@ void RTWindow::kbdCallback(GLFWwindow* window, int key, int scancode, int action
 				rtw->rotIn = false;
 			}
 			else {
-				std::cout << "Released: " << key << "\n";
+				//std::cout << "Released: " << key << "\n";
 				rtw->ppc->release(key);
 			}
 			break;
@@ -103,11 +103,11 @@ void RTWindow::mouseCallback(GLFWwindow* window, double x, double y) {
 	RTWindow* rtw = static_cast<RTWindow*>(glfwGetWindowUserPointer(window));
 
 	float sens = 0.0002;
-	float dx = (x - rtw->mousex) * sens;
+	float dx = -(x - rtw->mousex) * sens;
 	float dy = (y - rtw->mousey) * sens;
 	rtw->mousex = x;
 	rtw->mousey = y;
-	std::cout << "Mouse moved: " << dx << ", " << dy << "\n";
+	//std::cout << "Mouse moved: " << dx << ", " << dy << "\n";
 
 	V4 a = rtw->ppc->geta();
 	V4 b = rtw->ppc->getb();
@@ -126,22 +126,40 @@ void RTWindow::mouseCallback(GLFWwindow* window, double x, double y) {
 	c = wtocBasis * c;
 
 	M44 rotationMatrix = M44();
-	if (rtw->rotIn) {
-		rotationMatrix.SetColumn(0, V4(cos(dx), -sin(dx)*sin(dy), 0, -sin(dx)*cos(dy)));
-		rotationMatrix.SetColumn(1, V4(0, cos(dy), 0, -sin(dy)));
-		rotationMatrix.SetColumn(2, V4(0, 0, 1, 0));
-		rotationMatrix.SetColumn(3, V4(sin(dx), cos(dx)*sin(dy), 0, cos(dx)*cos(dy)));
-	}
-	else {
-		rotationMatrix.SetColumn(0, V4(cos(dx), 0, -sin(dx), 0));
-		rotationMatrix.SetColumn(1, V4(sin(dx) * sin(dy), cos(dy), cos(dx) * sin(dy), 0));
-		rotationMatrix.SetColumn(2, V4(sin(dx) * cos(dy), -sin(dy), cos(dx) * cos(dy), 0));
-		rotationMatrix.SetColumn(3, V4(0, 0, 0, 1));
-	}
+	//if (rtw->rotIn) {
+	//	rotationMatrix.SetColumn(0, V4(cos(dx), -sin(dx)*sin(dy), 0, -sin(dx)*cos(dy)));
+	//	rotationMatrix.SetColumn(1, V4(0, cos(dy), 0, -sin(dy)));
+	//	rotationMatrix.SetColumn(2, V4(0, 0, 1, 0));
+	//	rotationMatrix.SetColumn(3, V4(sin(dx), cos(dx)*sin(dy), 0, cos(dx)*cos(dy)));
+	//}
+	//else {
+	//	rotationMatrix.SetColumn(0, V4(cos(dx), 0, -sin(dx), 0));
+	//	rotationMatrix.SetColumn(1, V4(sin(dx) * sin(dy), cos(dy), cos(dx) * sin(dy), 0));
+	//	rotationMatrix.SetColumn(2, V4(sin(dx) * cos(dy), -sin(dy), cos(dx) * cos(dy), 0));
+	//	rotationMatrix.SetColumn(3, V4(0, 0, 0, 1));
+	//}
 
-	a = ctowBasis * (rotationMatrix * a);
-	b = ctowBasis * (rotationMatrix * b);
-	c = ctowBasis * (rotationMatrix * c);
+	rotationMatrix.SetColumn(0, V4(cos(dx), 0, sin(dx), 0));
+	rotationMatrix.SetColumn(1, V4(0, 1, 0, 0));
+	rotationMatrix.SetColumn(2, V4(-sin(dx), 0, cos(dx), 0));
+	rotationMatrix.SetColumn(3, V4(0, 0, 0, 1));
+
+	a = rotationMatrix * a;
+	b = rotationMatrix * b;
+	c = rotationMatrix * c;
+
+	rotationMatrix.SetColumn(0, V4(1, 0, 0, 0));
+	rotationMatrix.SetColumn(1, V4(0, cos(dy), sin(dy), 0));
+	rotationMatrix.SetColumn(2, V4(0, -sin(dy), cos(dy), 0));
+	rotationMatrix.SetColumn(3, V4(0, 0, 0, 1));
+
+	a = rotationMatrix * a;
+	b = rotationMatrix * b;
+	c = rotationMatrix * c;
+
+	a = ctowBasis * a;
+	b = ctowBasis * b;
+	c = ctowBasis * c;
 
 	rtw->ppc->setPose(a, b, c);
 }
