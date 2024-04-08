@@ -12,8 +12,8 @@
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>
 
-#define WIDTH 500
-#define HEIGHT 360
+#define WIDTH 300
+#define HEIGHT 240
 
 void main() {
     glfwInit();
@@ -30,15 +30,14 @@ void main() {
     material.specular = V3(0.3f);
     material.reflectivity = 0.05f;
     material.shininess = 5;
-    HyperSphere* hs1 = new HyperSphere(V4(0.0f, 20.0f, 25.0f, 1.0f), 10.0f);
 
 
     // I think this is a correct hyperquad
     // Hyperquad 1
-    Tetrahedron* tet1 = new Tetrahedron(V4(-50.0f, -50.0f, 0.0f, 0.0f), V4(-50.0f, -50.0f, 0.0f, 50.0f), V4(-50.0f, -50.0f, 500.0f, 0.0f), V4(50.0f, -50.0f, 0.0f, 0.0f));
-    Tetrahedron* tet2 = new Tetrahedron(V4(-50.0f, -50.0f, 500.0f, 50.0f), V4(-50.0f, -50.0f, 500.0f, 0.0f), V4(-50.0f, -50.0f, 0.0f, 50.0f), V4(50.0f, -50.0f, 500.0f, 50.0f));
-    Tetrahedron* tet3 = new Tetrahedron(V4(-50.0f, -50.0f, 0.0f, 50.0f), V4(-50.0f, -50.0f, 500.0f, 0.0f), V4(50.0f, -50.0f, 0.0f, 0.0f), V4(50.0f, -50.0f, 500.0f, 50.0f));
-    Tetrahedron* tet4 = new Tetrahedron(V4(50.0f, -50.0f, 0.0f, 50.0f), V4(-50.0f, -50.0f, 0.0f, 50.0f), V4(50.0f, -50.0f, 0.0f, 0.0f), V4(50.0f, -50.0f, 500.0f, 50.0f));
+    Tetrahedron* tet1 = new Tetrahedron(V4(-50.0f, -50.0f, -50.0f, 0.0f), V4(-50.0f, -50.0f, -50.0f, 50.0f), V4(-50.0f, -50.0f, 500.0f, 0.0f), V4(50.0f, -50.0f, -50.0f, 0.0f));
+    Tetrahedron* tet2 = new Tetrahedron(V4(-50.0f, -50.0f, 500.0f, 50.0f), V4(-50.0f, -50.0f, 500.0f, 0.0f), V4(-50.0f, -50.0f, -50.0f, 50.0f), V4(50.0f, -50.0f, 500.0f, 50.0f));
+    Tetrahedron* tet3 = new Tetrahedron(V4(-50.0f, -50.0f, -50.0f, 50.0f), V4(-50.0f, -50.0f, 500.0f, 0.0f), V4(50.0f, -50.0f, -50.0f, 0.0f), V4(50.0f, -50.0f, 500.0f, 50.0f));
+    Tetrahedron* tet4 = new Tetrahedron(V4(50.0f, -50.0f, -50.0f, 50.0f), V4(-50.0f, -50.0f, -50.0f, 50.0f), V4(50.0f, -50.0f, -50.0f, 0.0f), V4(50.0f, -50.0f, 500.0f, 50.0f));
 
     Material material2;
     material2.diffuse = V3(1.0f, 1.0f, 0.0f);
@@ -47,10 +46,10 @@ void main() {
     material2.shininess = 0;
 
     // Hyperquad 2
-    Tetrahedron* tet5 = new Tetrahedron(V4(-50.0f, -50.0f, 0.0f, 0.0f), V4(-50.0f, -50.0f, 500.0f, 0.0f), V4(-50.0f, -50.0f, 0.0f, 50.0f), V4(-50.0f, 50.0f, 0.0f, 0.0f));
-    Tetrahedron* tet6 = new Tetrahedron(V4(-50.0f, -50.0f, 500.0f, 50.0f), V4(-50.0f, -50.0f, 0.0f, 50.0f), V4(-50.0f, -50.0f, 500.0f, 0.0f), V4(-50.0f, 50.0f, 500.0f, 50.0f));
-    Tetrahedron* tet7 = new Tetrahedron(V4(-50.0f, -50.0f, 0.0f, 50.0f), V4(-50.0f, 50.0f, 0.0f, 0.0f), V4(-50.0f, -50.0f, 500.0f, 0.0f), V4(-50.0f, 50.0f, 500.0f, 50.0f));
-    Tetrahedron* tet8 = new Tetrahedron(V4(-50.0f, 50.0f, 0.0f, 50.0f), V4(-50.0f, 50.0f, 0.0f, 0.0f), V4(-50.0f, -50.0f, 0.0f, 50.0f), V4(-50.0f, 50.0f, 500.0f, 50.0f));
+    Tetrahedron* tet5 = new Tetrahedron(V4(-50.0f, -50.0f, -50.0f, 0.0f), V4(-50.0f, -50.0f, 500.0f, 0.0f), V4(-50.0f, -50.0f, -50.0f, 50.0f), V4(-50.0f, 50.0f, -50.0f, 0.0f));
+    Tetrahedron* tet6 = new Tetrahedron(V4(-50.0f, -50.0f, 500.0f, 50.0f), V4(-50.0f, -50.0f, -50.0f, 50.0f), V4(-50.0f, -50.0f, 500.0f, 0.0f), V4(-50.0f, 50.0f, 500.0f, 50.0f));
+    Tetrahedron* tet7 = new Tetrahedron(V4(-50.0f, -50.0f, -50.0f, 50.0f), V4(-50.0f, 50.0f, -50.0f, 0.0f), V4(-50.0f, -50.0f, 500.0f, 0.0f), V4(-50.0f, 50.0f, 500.0f, 50.0f));
+    Tetrahedron* tet8 = new Tetrahedron(V4(-50.0f, 50.0f, -50.0f, 50.0f), V4(-50.0f, 50.0f, -50.0f, 0.0f), V4(-50.0f, -50.0f, -50.0f, 50.0f), V4(-50.0f, 50.0f, 500.0f, 50.0f));
 
     Material material3;
     material3.diffuse = V3(1.0f, 0.0f, 1.0f);
@@ -59,10 +58,10 @@ void main() {
     material3.shininess = 20;
 
     // Hyperquad 3
-    Tetrahedron* tet9 = new Tetrahedron(V4(50.0f, -50.0f, 0.0f, 0.0f), V4(50.0f, -50.0f, 0.0f, 50.0f), V4(50.0f, -50.0f, 500.0f, 0.0f), V4(50.0f, 50.0f, 0.0f, 0.0f));
-    Tetrahedron* tet10 = new Tetrahedron(V4(50.0f, -50.0f, 500.0f, 50.0f), V4(50.0f, -50.0f, 500.0f, 0.0f), V4(50.0f, -50.0f, 0.0f, 50.0f), V4(50.0f, 50.0f, 500.0f, 50.0f));
-    Tetrahedron* tet11 = new Tetrahedron(V4(50.0f, -50.0f, 0.0f, 50.0f), V4(50.0f, -50.0f, 500.0f, 0.0f), V4(50.0f, 50.0f, 0.0f, 0.0f), V4(50.0f, 50.0f, 500.0f, 50.0f));
-    Tetrahedron* tet12 = new Tetrahedron(V4(50.0f, 50.0f, 0.0f, 50.0f), V4(50.0f, -50.0f, 0.0f, 50.0f), V4(50.0f, 50.0f, 0.0f, 0.0f), V4(50.0f, 50.0f, 500.0f, 50.0f));
+    Tetrahedron* tet9 = new Tetrahedron(V4(50.0f, -50.0f, -50.0f, 0.0f), V4(50.0f, -50.0f, -50.0f, 50.0f), V4(50.0f, -50.0f, 500.0f, 0.0f), V4(50.0f, 50.0f, -50.0f, 0.0f));
+    Tetrahedron* tet10 = new Tetrahedron(V4(50.0f, -50.0f, 500.0f, 50.0f), V4(50.0f, -50.0f, 500.0f, 0.0f), V4(50.0f, -50.0f, -50.0f, 50.0f), V4(50.0f, 50.0f, 500.0f, 50.0f));
+    Tetrahedron* tet11 = new Tetrahedron(V4(50.0f, -50.0f, -50.0f, 50.0f), V4(50.0f, -50.0f, 500.0f, 0.0f), V4(50.0f, 50.0f, -50.0f, 0.0f), V4(50.0f, 50.0f, 500.0f, 50.0f));
+    Tetrahedron* tet12 = new Tetrahedron(V4(50.0f, 50.0f, -50.0f, 50.0f), V4(50.0f, -50.0f, -50.0f, 50.0f), V4(50.0f, 50.0f, -50.0f, 0.0f), V4(50.0f, 50.0f, 500.0f, 50.0f));
 
     Material material4;
     material4.diffuse = V3(0.0f, 0.0f, 1.0f);
@@ -71,10 +70,10 @@ void main() {
     material4.shininess = 200;
 
     // Hyperquad 4
-    Tetrahedron* tet13 = new Tetrahedron(V4(-50.0f, 50.0f, 0.0f, 0.0f), V4(-50.0f, 50.0f, 500.0f, 0.0f), V4(-50.0f, 50.0f, 0.0f, 50.0f), V4(50.0f, 50.0f, 0.0f, 0.0f));
-    Tetrahedron* tet14 = new Tetrahedron(V4(-50.0f, 50.0f, 500.0f, 50.0f), V4(-50.0f, 50.0f, 0.0f, 50.0f), V4(-50.0f, 50.0f, 500.0f, 0.0f), V4(50.0f, 50.0f, 500.0f, 50.0f));
-    Tetrahedron* tet15 = new Tetrahedron(V4(-50.0f, 50.0f, 0.0f, 50.0f), V4(50.0f, 50.0f, 0.0f, 0.0f), V4(-50.0f, 50.0f, 500.0f, 0.0f), V4(50.0f, 50.0f, 500.0f, 50.0f));
-    Tetrahedron* tet16 = new Tetrahedron(V4(50.0f, 50.0f, 0.0f, 50.0f), V4(50.0f, 50.0f, 0.0f, 0.0f), V4(-50.0f, 50.0f, 0.0f, 50.0f), V4(50.0f, 50.0f, 500.0f, 50.0f));
+    Tetrahedron* tet13 = new Tetrahedron(V4(-50.0f, 50.0f, -50.0f, 0.0f), V4(-50.0f, 50.0f, 500.0f, 0.0f), V4(-50.0f, 50.0f, -50.0f, 50.0f), V4(50.0f, 50.0f, -50.0f, 0.0f));
+    Tetrahedron* tet14 = new Tetrahedron(V4(-50.0f, 50.0f, 500.0f, 50.0f), V4(-50.0f, 50.0f, -50.0f, 50.0f), V4(-50.0f, 50.0f, 500.0f, 0.0f), V4(50.0f, 50.0f, 500.0f, 50.0f));
+    Tetrahedron* tet15 = new Tetrahedron(V4(-50.0f, 50.0f, -50.0f, 50.0f), V4(50.0f, 50.0f, -50.0f, 0.0f), V4(-50.0f, 50.0f, 500.0f, 0.0f), V4(50.0f, 50.0f, 500.0f, 50.0f));
+    Tetrahedron* tet16 = new Tetrahedron(V4(50.0f, 50.0f, -50.0f, 50.0f), V4(50.0f, 50.0f, -50.0f, 0.0f), V4(-50.0f, 50.0f, -50.0f, 50.0f), V4(50.0f, 50.0f, 500.0f, 50.0f));
 
     Tetrahedron* tet17 = new Tetrahedron(V4(-50.0f, 0.0f, 500.0f, 0.0f), V4(-50.0f, 50.0f, 500.0f, 0.0f), V4(-50.0f, 0.0f, 500.0f, 50.0f), V4(50.0f, 0.0f, 500.0f, 0.0f));
     Tetrahedron* tet18 = new Tetrahedron(V4(-50.0f, 50.0f, 500.0f, 50.0f), V4(-50.0f, 0.0f, 500.0f, 50.0f), V4(-50.0f, 50.0f, 500.0f, 0.0f), V4(50.0f, 50.0f, 500.0f, 50.0f));
@@ -90,6 +89,10 @@ void main() {
     std::cout << "(" << n.x << ", " << n.y << ", " << n.z << ", " << n.w << ")\n";
     n = tet20->getNormal();
     std::cout << "(" << n.x << ", " << n.y << ", " << n.z << ", " << n.w << ")\n";
+
+
+    HyperSphere* hs1 = new HyperSphere(V4(0.0f, 20.0f, 25.0f, 1.0f), 10.0f);
+    HyperSphere* hs2 = new HyperSphere(V4(-10.0f, 0.0f, 15.0f, 0.0f), 8.0f);
 
     PointLight* l1 = new PointLight(V4(25.0f, 40.0f, 5.0f, 1.0f), V3(1.0f), V3(1.0f));
 
@@ -113,16 +116,18 @@ void main() {
     tet15->material = &material4;
     tet16->material = &material4;
 
-    tet17->material = &material2;
-    tet18->material = &material2;
-    tet19->material = &material2;
-    tet20->material = &material2;
+    tet17->material = &material;
+    tet18->material = &material;
+    tet19->material = &material;
+    tet20->material = &material;
 
     hs1->material = &material;
-    Scene* scene = new Scene(V3(0.0f), V3(0.0f), 4);
+    hs2->material = &material3;
+    Scene* scene = new Scene(V3(0.0f), V3(0.0f), 14);
     scene->AddLight(l1);
 
     scene->AddShape(hs1);
+    scene->AddShape(hs2);
 
     scene->AddShape(tet1);
     scene->AddShape(tet2);
