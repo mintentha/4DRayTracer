@@ -52,7 +52,7 @@ V4 HyperQuad::getNormal(V4 p) {
 
 /* Möller–Trumbore Generalization */
 V4 HyperQuad::intersectionBarycentric(V4 o, V4 dir, V4 a, V4 b, V4 c, V4 d) {
-	V4 ret(1.0f, 0.0f, 0.0f, 0.0f);
+	V4 ret(-1.0f, 0.0f, 0.0f, 0.0f);
 	dir.normalize();
 
 	V4 p = b - a;

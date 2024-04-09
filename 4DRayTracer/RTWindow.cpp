@@ -386,8 +386,11 @@ void RTWindow::renderBackBuffer() {
 			glfwGetCursorPos(window, &mouseX, &mouseY); // is this thread safe?
 			updateRot(static_cast<float>(mouseX), static_cast<float>(mouseY));
 			for (size_t i = 0; i < AXES_PLANES::PLANE_SIZE; i++) {
-				ppc->rotate(static_cast<AXES_PLANES::PLANE>(i), deltatheta[i]);
-				deltatheta[i] = 0.0f;
+				//std::cout << static_cast<AXES_PLANES::PLANE>(i) << " " << deltatheta[i] << std::endl;
+				if (deltatheta[i] != 0.0f) {
+					ppc->rotate(static_cast<AXES_PLANES::PLANE>(i), deltatheta[i]);
+					deltatheta[i] = 0.0f;
+				}
 			}
 		}
 		buttonLock.unlock();

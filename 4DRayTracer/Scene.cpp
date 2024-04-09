@@ -115,17 +115,8 @@ V3 Scene::RayTrace(Shape* curShape, V4 o, V4 dir, size_t depth) {
 
 	V4 reflected = reflect(-dir, shape->getNormal(p));
 
-	//col += shape->material->reflectivity * RayTrace(shape, p, reflected, depth - 1);
-	//return col;
-
-
-	// TODO: Lighting
-	// For now, just return the material diffuse color
-	// 
-	if (shape->material) {
-		return shape->material->diffuse;
-	}
-	return V3(0.0f); // default material is black
+	col += shape->material->reflectivity * RayTrace(shape, p, reflected, depth - 1);
+	return col;
 }
 
 V3 Scene::RayTrace(V4 o, V4 dir, size_t depth) {

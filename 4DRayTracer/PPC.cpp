@@ -63,7 +63,7 @@ void PPC::setPose(V4 C, V4 LaP, V4 upV, V4 anaV) {
 	b = newb;
 	c = newc;
 	d = newd;
-	this->C = c;
+	this->C = C;
 }
 
 void PPC::setPose(V4 _a, V4 _b, V4 _c) {
